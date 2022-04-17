@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Client.Utils
+{
+    public static class Actions
+    {
+        public const string LOGIN = "login";
+        public const string REGISTER = "register";
+        public const string SHOW_LIST = "show_list";
+        public const string BOOKING = "booking";
+    }
+}
