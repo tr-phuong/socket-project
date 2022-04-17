@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using Client.entities;
 using Client.Receive;
+using Client.DTO;
 
 namespace Client.Utils
 {
@@ -16,11 +17,11 @@ namespace Client.Utils
     {
         private const int PORT = 11111;
 
-        private const int BUFFER_SIZE = 5120; // 5MB
+        private const int BUFFER_SIZE = 20480; // 20MB
 
         private static Socket socket;
 
-        private byte[] buffer = new byte[BUFFER_SIZE]; // Data buffer
+        private static byte[] buffer = new byte[BUFFER_SIZE]; // Data buffer
 
         public static void connection()
         {
@@ -52,7 +53,7 @@ namespace Client.Utils
                 Console.WriteLine("Unexpected exception : {0}", e.ToString());
             }
         }
-        public ReceiveListData receiveListRooms()
+        public static ReceiveListData receiveListRooms()
         {
             ReceiveListData receiveListData = new ReceiveListData();
             int byteRecv = socket.Receive(buffer);
@@ -60,14 +61,26 @@ namespace Client.Utils
             ReceiveListData list = receiveListData.getListRooms(dataServerRecv);
             return list;
         }
-        public ReceiveData<UserEntity> receiveUser()
+        public static ReceiveData<UserDTO> receiveUser()
         {
             int byteRecv = socket.Receive(buffer);
             string dataServerRecv = Encoding.UTF8.GetString(buffer, 0, byteRecv);
-            ReceiveData<UserEntity> obj = ReceiveData<UserEntity>.getObject(dataServerRecv);
+            ReceiveData<UserDTO> obj = ReceiveData<UserDTO>.getObject(dataServerRecv);
             return obj;
         }
-        public int send(SendData<UserEntity> sendData)
+        public static int send(SendData<UserEntity> sendData)
+        {
+            string data = JsonConvert.SerializeObject(sendData);
+            // Creation of message that
+            // we will send to Server
+            byte[] byteSent = Encoding.UTF8.GetBytes(data);
+            int byteSentNum = socket.Send(byteSent);
+            return byteSentNum;
+            //dynamic dataSend = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(buffer, 0, byteSentNum));
+            //SendData<UserEntity> send = SendData<UserEntity>.getObject(dataSend);
+            //return send;
+        }
+        public static int sendUserLogin(SendData<UserLogin> sendData)
         {
             string data = JsonConvert.SerializeObject(sendData);
             // Creation of message that
@@ -80,7 +93,7 @@ namespace Client.Utils
             //return send;
         }
 
-        public int send(SendData<String> sendData)
+        public static int send(SendData<String> sendData)
         {
             string data = JsonConvert.SerializeObject(sendData);
             // Creation of message that

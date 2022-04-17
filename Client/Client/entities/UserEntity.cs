@@ -21,6 +21,5 @@ namespace Client.entities
             this.password = password;
             this.bankCardId = bankCardId;
         }
-
     }
 }

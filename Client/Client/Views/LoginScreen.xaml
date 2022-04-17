@@ -209,7 +209,7 @@
                            VerticalAlignment="Top"
                            FontFamily="Sitka Subheading"
                            FontSize="12">
-                    <Hyperlink Foreground="Black">Đăng ký tài khoản</Hyperlink>
+                    <Hyperlink Click="register_Click" Foreground="Black">Đăng ký tài khoản</Hyperlink>
                 </TextBlock>
             </Grid>
         </Grid>

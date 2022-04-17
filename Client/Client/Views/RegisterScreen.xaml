@@ -54,7 +54,11 @@
                 <RowDefinition Height="1.5*"/>
 
                 <!--button đăng nhập-->
-                <RowDefinition Height="3.0*"/>
+                <RowDefinition Height="2.0*"/>
+
+                <RowDefinition Height="0.7*">
+                    
+                </RowDefinition>
             </Grid.RowDefinitions>
 
             <!--Action Bar-->
@@ -219,16 +223,15 @@
                     </Button.Resources>
                 </Button>
 
+            </Grid>
 
-                <!--Version-->
-                <Label Name="version" 
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Bottom"
-                       FontStyle="Italic" 
-                       FontFamily="Times New Roman" 
-                       FontSize="15"
-                       Margin="0 0 0 5"/>
-
+            <Grid Grid.Row="5">
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           FontFamily="Sitka Subheading"
+                           FontSize="12">
+                    <Hyperlink Click="login_Click" Foreground="Black">Quay về đăng nhập</Hyperlink>
+                </TextBlock>
             </Grid>
         </Grid>
     </Border>

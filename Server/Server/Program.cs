@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Npgsql;
 using Server.Config;
 using Server.Controllers;
@@ -19,7 +20,7 @@ namespace Server
     class Program
     {
         private const int PORT = 11111;
-        private const int BUFFER_SIZE = 5120;
+        private const int BUFFER_SIZE = 20480; //20MB
 
         private Helper helper = new Helper();
         static void Main(string[] args)
@@ -70,9 +71,17 @@ namespace Server
                     bool exit = false;
                     byte[] bytes = new Byte[BUFFER_SIZE]; // Data buffer
 
+                    Console.WriteLine("Client starting connect...");
+
+                    bool authentication = false;
+
                     while (true)
                     {
-                        if (exit) break;
+                        if (exit)
+                        {
+                            Console.WriteLine("Client close connect...");
+                            break;
+                        }
                         // clientSocket.Connected
 
                         int numByte = clientSocket.Receive(bytes);
@@ -91,7 +100,7 @@ namespace Server
                                     string registerData = JsonConvert.SerializeObject(userRegisterSend);
                                     byte[] registerDataBytes = Encoding.UTF8.GetBytes(registerData);
 
-                                    // Send a message to Client
+                                    // Send a data to Client
                                     clientSocket.Send(registerDataBytes);
                                     Log.info(Lever.SERVER, Actions.REGISTER, registerData);
                                 }catch(Exception ex) { 
@@ -99,22 +108,53 @@ namespace Server
                                 }
                                 break;
                             case Actions.LOGIN:
-                                var userLoginSend = userController.register(dataReceive.data);
-
-                                string loginData = JsonConvert.SerializeObject(userLoginSend);
-                                byte[] loginDataBytes = Encoding.UTF8.GetBytes(loginData);
-
-                                // Send a message to Client
-                                clientSocket.Send(loginDataBytes);
-                                if (userLoginSend.getFlags())
+                                try
                                 {
-                                    // show list
+                                    Log.info(Lever.CLIENT, Actions.LOGIN, json);
+                                    JObject jobj = dataReceive.data as JObject;
+                                    UserLogin userLogin = jobj.ToObject<UserLogin>();
+                                    SendData<UserDTO> userLoginSend = userController.login(userLogin);
 
+                                    if (userLoginSend.getFlags() && userLoginSend.action.Equals(Actions.LOGGED))
+                                    {
+                                        string loggedData = JsonConvert.SerializeObject(userLoginSend);
+                                        byte[] loggedDataBytes = Encoding.UTF8.GetBytes(loggedData);
+
+                                        // Send a message to Client
+                                        clientSocket.Send(loggedDataBytes);
+                                        Log.info(Lever.SERVER, Actions.LOGGED, loggedData);
+
+                                        // Xác nhận đã đăng nhập, client gửi yêu cầu đăng nhập lần tiếp theo sẽ thông báo đã đăng nhập
+                                        // Hiển thị danh sách
+                                        authentication = true;
+                                    }
+                                    else
+                                    {
+                                        // Đã đăng nhập
+                                        // Chỉ gửi thông báo đã đăng nhập
+                                        if (authentication)
+                                        {
+                                            SendData<UserDTO> userLoggedSend = userController.logged();
+                                            string loggedData = JsonConvert.SerializeObject(userLoggedSend);
+                                            byte[] loggedDataBytes = Encoding.UTF8.GetBytes(loggedData);
+                                            clientSocket.Send(loggedDataBytes);
+                                            Log.info(Lever.SERVER, Actions.LOGGED, loggedData);
+                                            break;
+                                        }
+                                        string loginData = JsonConvert.SerializeObject(userLoginSend);
+                                        byte[] loginDataBytes = Encoding.UTF8.GetBytes(loginData);
+
+                                        // Send a message to Client
+                                        clientSocket.Send(loginDataBytes);
+                                        Log.info(Lever.SERVER, Actions.LOGIN, loginData);
+                                    }
+                                }
+                                catch (Exception ex) {
+                                    Console.WriteLine(ex.Message);
                                 }
                                 break;
                             case Actions.SHOW_LIST:
-                                try
-                                {
+                                try {
                                     Log.info(Lever.CLIENT, Actions.SHOW_LIST, json);
                                     string name = (string)dataReceive.data;
                                     var listRoomsOfhotel = hotelController.getListRoomsOfHotel(name);
@@ -125,9 +165,7 @@ namespace Server
                                     // Send a message to Client
                                     clientSocket.Send(showListDataBytes);
                                     Log.info(Lever.SERVER, Actions.SHOW_LIST, showListData);
-                                }
-                                catch(Exception ex)
-                                {
+                                } catch(Exception ex) {
                                     Console.WriteLine(ex.Message);
                                 }
                                 break;

@@ -1,4 +1,5 @@
-﻿using Client.entities;
+﻿using Client.DTO;
+using Client.entities;
 using Client.Utils;
 using System;
 using System.Collections.Generic;
@@ -74,17 +75,24 @@ namespace Client.Views
 
         private void btnResgister_Click(object sender, RoutedEventArgs e)
         {
-            SocketUtils.connection();
             string username = tbUsername.Text;
             string password = tbPassword.Password;
             string bankCardID = tbBankCardId.Text;
             UserEntity newUser = new UserEntity(username, password, bankCardID);
 
-            SocketUtils socket = new SocketUtils();
-            SendData<UserEntity> sendData = new SendData<UserEntity>(Actions.REGISTER, "aaa", newUser);
-            socket.send(sendData);
-            MessageBox.Show(sendData.message);
-            SocketUtils.close();
+            SendData<UserEntity> sendData = new SendData<UserEntity>(Actions.REGISTER, "", newUser);
+            SocketUtils.send(sendData);
+            ReceiveData<UserDTO> receive = SocketUtils.receiveUser();
+            Dialog dialog = new Dialog() { Message = receive.message };
+            dialog.Owner = Window.GetWindow(this);
+            dialog.ShowDialog();
+        }
+
+        private void login_Click(object sender, RoutedEventArgs e)
+        {
+            LoginScreen loginScreen = new LoginScreen();
+            loginScreen.Visibility = Visibility.Visible;
+            this.Close();
         }
     }
 }

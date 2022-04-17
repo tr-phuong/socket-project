@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\pc\Desktop\project\Client\Client\App.xaml
 6-794069367
 
-201672726339
+221337257457
 197-75570074
 MainWindow.xaml;Utils\Dialog.xaml;Utils\Message.xaml;Views\LoginScreen.xaml;Views\RegisterScreen.xaml;Views\SearchScreen.xaml;
 
-False
+True
 

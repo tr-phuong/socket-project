@@ -16,23 +16,29 @@ namespace Server.Controllers
     {
         private UserModel userModel = new UserModel();
 
-        public SendData<UserDTO> login(UserEntity userEntity)
+        public SendData<UserDTO> login(UserLogin userLogin)
         {
-            string username = userEntity.username;
-            string password = userEntity.password;
+            string username = userLogin.username;
+            string password = userLogin.password;
 
             UserEntity found = userModel.findByUsername(username);
 
             if(found == null) 
-                return new SendData<UserDTO>(Actions.LOGIN,"User khong ton tai", new UserDTO());
+                return new SendData<UserDTO>(Actions.LOGIN,"User không tồn tại", new UserDTO());
 
             bool isMatch = BCrypt.Net.BCrypt.Verify(password, found.password);
             if(!isMatch)
-                return new SendData<UserDTO>(Actions.LOGIN, "Mat khau khong dung", new UserDTO());
+                return new SendData<UserDTO>(Actions.LOGIN, "Mật khẩu không đúng", new UserDTO());
 
-            SendData<UserDTO> result = new SendData<UserDTO>(Actions.LOGIN, Message.SUCCESS, new UserDTO(found.id, found.username));
+            SendData<UserDTO> result = new SendData<UserDTO>(Actions.LOGGED, Message.SUCCESS, new UserDTO(found.id, found.username));
             result.setFlags();
 
+            return result;
+        }
+
+        public SendData<UserDTO> logged()
+        {
+            SendData<UserDTO> result = new SendData<UserDTO>(Actions.LOGGED, Message.ERROR, new UserDTO());
             return result;
         }
 

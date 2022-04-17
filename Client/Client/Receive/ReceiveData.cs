@@ -24,7 +24,7 @@ namespace Client
 
         public static ReceiveData<DTO> getObject(string data)
         {
-            dynamic result = JsonConvert.DeserializeObject<DTO>(data);
+            dynamic result = JsonConvert.DeserializeObject<ReceiveData<DTO>>(data);
             return result;
         }
 

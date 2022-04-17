@@ -8,7 +8,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\credit-card.png" />
+    <None Remove="Views\Images\credit-card.png" />
+    <None Remove="Views\Images\Pass.png" />
+    <None Remove="Views\Images\Phòng 4 Người Nhìn Ra Biển.jpg" />
+    <None Remove="Views\Images\Phòng Gia Đình Nhìn Ra Biển.jpg" />
+    <None Remove="Views\Images\Phòng Gia Đình.jpg" />
+    <None Remove="Views\Images\Phòng Giường Đôi có Ban công và Nhìn ra Biển.jpg" />
+    <None Remove="Views\Images\Phòng Giường Đôi Có Ban Công.jpg" />
+    <None Remove="Views\Images\Phòng Tiêu Chuẩn Giường Đôi.jpg" />
+    <None Remove="Views\Images\Studio 2 Tầng.jpg" />
+    <None Remove="Views\Images\Studio Superior.jpg" />
+    <None Remove="Views\Images\Suite Gia Đình.jpg" />
+    <None Remove="Views\Images\Suite.jpg" />
+    <None Remove="Views\Images\User.png" />
+    <None Remove="Views\Pass.png" />
+    <None Remove="Views\Phòng 4 Người Nhìn Ra Biển.jpg" />
     <None Remove="Views\Phòng Deluxe Giường Đôi Có Bồn Tắm.jpg" />
+    <None Remove="Views\Phòng Gia Đình Nhìn Ra Biển.jpg" />
+    <None Remove="Views\Phòng Gia Đình.jpg" />
+    <None Remove="Views\Phòng Giường Đôi có Ban công và Nhìn ra Biển.jpg" />
+    <None Remove="Views\Phòng Giường Đôi Có Ban Công.jpg" />
+    <None Remove="Views\Phòng Tiêu Chuẩn Giường Đôi.jpg" />
+    <None Remove="Views\Studio 2 Tầng.jpg" />
+    <None Remove="Views\Studio Superior.jpg" />
+    <None Remove="Views\Suite Gia Đình.jpg" />
+    <None Remove="Views\Suite.jpg" />
+    <None Remove="Views\User.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +45,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Views\Images\credit-card.png" />
+    <Resource Include="Views\Images\Pass.png" />
+    <Resource Include="Views\Images\Phòng 4 Người Nhìn Ra Biển.jpg" />
     <Resource Include="Views\Images\Phòng Deluxe Giường Đôi Có Bồn Tắm.jpg" />
+    <Resource Include="Views\Images\Phòng Gia Đình Nhìn Ra Biển.jpg" />
+    <Resource Include="Views\Images\Phòng Gia Đình.jpg" />
+    <Resource Include="Views\Images\Phòng Giường Đôi có Ban công và Nhìn ra Biển.jpg" />
+    <Resource Include="Views\Images\Phòng Giường Đôi Có Ban Công.jpg" />
+    <Resource Include="Views\Images\Phòng Tiêu Chuẩn Giường Đôi.jpg" />
+    <Resource Include="Views\Images\Studio 2 Tầng.jpg" />
+    <Resource Include="Views\Images\Studio Superior.jpg" />
+    <Resource Include="Views\Images\Suite Gia Đình.jpg" />
+    <Resource Include="Views\Images\Suite.jpg" />
+    <Resource Include="Views\Images\User.png" />
   </ItemGroup>
 
 </Project>

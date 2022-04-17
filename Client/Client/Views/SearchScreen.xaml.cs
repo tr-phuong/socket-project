@@ -28,8 +28,6 @@ namespace Client.Views
         {
             InitializeComponent();
 
-            SocketUtils.connection();
-
 
             //for (int i = 0; i < 5; i++)
             //{
@@ -91,11 +89,9 @@ namespace Client.Views
         private void searchChange()
         {
             string name = searchTextBox.Text;
-            SocketUtils socket = new SocketUtils();
             SendData<String> sendData = new SendData<String>(Actions.SHOW_LIST, "aaa", name);
-            int byteSent = socket.send(sendData);
-            ReceiveListData receiveListData = socket.receiveListRooms();
-            MessageBox.Show(receiveListData.listData[0].poster);
+            int byteSent = SocketUtils.send(sendData);
+            ReceiveListData receiveListData = SocketUtils.receiveListRooms();
             productsListView.ItemsSource = receiveListData.listData.ToList();
         }
         /// <summary>
