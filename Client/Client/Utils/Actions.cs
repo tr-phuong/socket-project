@@ -8,10 +8,14 @@ namespace Client.Utils
 {
     public static class Actions
     {
-        public const string LOGIN = "login";
-        public const string LOGGED = "logged";
-        public const string REGISTER = "register";
-        public const string SHOW_LIST = "show_list";
-        public const string BOOKING = "booking";
+        public const string LOGIN = "LOGIN";
+        public const string LOGGED = "LOGGED";
+        public const string REGISTER = "REGISTER";
+        public const string SHOW_LIST = "SHOW_LIST";
+        public const string BOOKING = "BOOKING";
+        public const string DETAIL_ROOM = "DETAIL_ROOM";
+
+        // exit
+        public const string EXIT = "EXIT";
     }
 }

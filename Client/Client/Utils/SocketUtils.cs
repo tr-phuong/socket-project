@@ -30,11 +30,11 @@ namespace Client.Utils
             // computer.
             IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddr = ipHost.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddr, PORT);
+            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Loopback, PORT);
 
             // Creation TCP/IP Socket using
             // Socket Class Constructor
-            socket = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
 
@@ -68,13 +68,41 @@ namespace Client.Utils
             ReceiveData<UserDTO> obj = ReceiveData<UserDTO>.getObject(dataServerRecv);
             return obj;
         }
+        public static ReceiveData<RoomsEntity> receiveRoom()
+        {
+            int byteRecv = socket.Receive(buffer);
+            string dataServerRecv = Encoding.UTF8.GetString(buffer, 0, byteRecv);
+            ReceiveData<RoomsEntity> obj = ReceiveData<RoomsEntity>.getObject(dataServerRecv);
+            return obj;
+        }
+        public static ReceiveData<long> receiveTotal()
+        {
+            int byteRecv = socket.Receive(buffer);
+            string dataServerRecv = Encoding.UTF8.GetString(buffer, 0, byteRecv);
+            ReceiveData<long> obj = ReceiveData<long>.getObject(dataServerRecv);
+            return obj;
+        }
+
+        // Send
         public static int send(SendData<UserEntity> sendData)
         {
             string data = JsonConvert.SerializeObject(sendData);
             // Creation of message that
             // we will send to Server
             byte[] byteSent = Encoding.UTF8.GetBytes(data);
-            int byteSentNum = socket.Send(byteSent);
+            int byteSentNum = socket.Send(byteSent, 0, byteSent.Length, SocketFlags.None);
+            return byteSentNum;
+            //dynamic dataSend = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(buffer, 0, byteSentNum));
+            //SendData<UserEntity> send = SendData<UserEntity>.getObject(dataSend);
+            //return send;
+        }
+        public static int send(SendData<BookEntity> sendData)
+        {
+            string data = JsonConvert.SerializeObject(sendData);
+            // Creation of message that
+            // we will send to Server
+            byte[] byteSent = Encoding.UTF8.GetBytes(data);
+            int byteSentNum = socket.Send(byteSent, 0, byteSent.Length, SocketFlags.None);
             return byteSentNum;
             //dynamic dataSend = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(buffer, 0, byteSentNum));
             //SendData<UserEntity> send = SendData<UserEntity>.getObject(dataSend);
@@ -86,7 +114,7 @@ namespace Client.Utils
             // Creation of message that
             // we will send to Server
             byte[] byteSent = Encoding.UTF8.GetBytes(data);
-            int byteSentNum = socket.Send(byteSent);
+            int byteSentNum = socket.Send(byteSent, 0, byteSent.Length, SocketFlags.None);
             return byteSentNum;
             //dynamic dataSend = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(buffer, 0, byteSentNum));
             //SendData<UserEntity> send = SendData<UserEntity>.getObject(dataSend);
@@ -99,12 +127,25 @@ namespace Client.Utils
             // Creation of message that
             // we will send to Server
             byte[] byteSent = Encoding.UTF8.GetBytes(data);
-            int byteSentNum = socket.Send(byteSent);
+            int byteSentNum = socket.Send(byteSent, 0, byteSent.Length, SocketFlags.None);
             return byteSentNum;
             //dynamic dataSend = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(buffer, 0, byteSentNum));
             //SendData<UserEntity> send = SendData<UserEntity>.getObject(dataSend);
             //return send;
         }
+        public static int send(SendData<int> sendData)
+        {
+            string data = JsonConvert.SerializeObject(sendData);
+            // Creation of message that
+            // we will send to Server
+            byte[] byteSent = Encoding.UTF8.GetBytes(data);
+            int byteSentNum = socket.Send(byteSent, 0, byteSent.Length, SocketFlags.None);
+            return byteSentNum;
+            //dynamic dataSend = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(buffer, 0, byteSentNum));
+            //SendData<UserEntity> send = SendData<UserEntity>.getObject(dataSend);
+            //return send;
+        }
+        // End
         public static void close()
         {
             try

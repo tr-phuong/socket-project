@@ -87,7 +87,7 @@ namespace Client.Views
             }
             else
             {
-                MainWindow mainWindow = new MainWindow();
+                MainWindow mainWindow = new MainWindow(receive.data.username);
                 mainWindow.Show();
 
                 this.Close();

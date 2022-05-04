@@ -1,0 +1,268 @@
+﻿<Window x:Class="Client.Views.PopupBookingScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Client.Views"
+        mc:Ignorable="d"
+        Title="PopupBookingScreen"
+         Name="registerScreen"
+        Height="480" Width="500" 
+        WindowStyle="None"  
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
+        Background="Transparent">
+    <!--Style button-->
+    <Window.Resources>
+        <SolidColorBrush x:Key="Fluent.Ribbon.Brushes.WindowCommands.CaptionButton.Foreground" Color="White"/>
+        <Style x:Key="EllipseButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" BorderThickness="0" BorderBrush="White" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+
+    <Border CornerRadius="8" Background="#FFFAFAFA" >
+        <Grid>
+            <Grid.RowDefinitions>
+
+                <RowDefinition Height="2*"/>
+                
+                <RowDefinition Height="1.5*"/>
+
+                <RowDefinition Height="1.5*"/>
+
+                <RowDefinition Height="1.5*"/>
+
+                <RowDefinition Height="1.5*"/>
+                
+                <RowDefinition Height="1.5*"/>
+
+                <RowDefinition Height="2.0*"/>
+
+            </Grid.RowDefinitions>
+
+            <!--Action Bar-->
+            <materialDesign:ColorZone
+                MouseDown="ColorZone_MouseDown"
+                Padding="5"
+                Background="#21bf73"
+                CornerRadius="8"
+                materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                <!--Mode="Light"-->
+                <Grid Height="30">
+                    <!--Tiêu đề-->
+                    <TextBlock Name="txtTitle"
+                               Text="Đặt Phòng"
+                               FontSize="20"
+                               FontFamily="Sitka Subheading"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"/>
+                    <!--Bộ ba button minimize, maximize và close-->
+                    <Button Click="btnCommands_Click"
+                            Tag="btnClose"
+                            Height="25" Width="25"
+                            BorderBrush="OrangeRed"
+                            Opacity="0.8"
+                            Background="#FFF6713F"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        <materialDesign:PackIcon Kind="Power"
+                                                 Height="15"
+                                                 Width="15"/>
+                    </Button>
+                    <Button Click="btnCommands_Click"
+                            Tag="btnMaxim"
+                            Margin="0,0,30,0"
+                            Height="25" Width="25" Opacity="0.8"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                            Background="#21bf73"
+                            BorderBrush="#2b580c">
+                        <materialDesign:PackIcon Kind="WindowMaximize"
+                                                 Height="15"
+                                                 Width="15"/>
+                    </Button>
+                    <Button Click="btnCommands_Click"
+                            Tag="btnMinim"
+                            Margin="0,0,60,0"
+                            Height="25" Width="25" Opacity="0.8"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                            Background="#21bf73"
+                            BorderBrush="#2b580c">
+                        <materialDesign:PackIcon Kind="WindowMinimize" 
+                                                 Height="15"
+                                                 Width="15"/>
+                    </Button>
+                </Grid>
+            </materialDesign:ColorZone>
+
+            <Grid Grid.Row="1" Margin="0 0 0 0" >
+                <Grid Margin="0 10 0 10">
+                    <!--AvartarUser-->
+                    <materialDesign:PackIcon Kind="Home"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Left"
+                                             Height="40" Margin="10 0 0 0"
+                                             Width="40"/>
+
+                    <!--Textbox nhập tên-->
+                    <TextBox Name="hotelNameTB"
+                         FontSize="17"
+                         FontFamily="Sitka Subheading"
+                         Background="Transparent"
+                         Margin="70 0 10,0"
+                         BorderThickness="0,0,0,0.25"
+                         VerticalContentAlignment="Center" 
+                         KeyDown="textBox_KeyDown"
+                         materialDesign:HintAssist.Hint="Tên Khách Sạn"
+                         Padding="1 0 0 0"
+                         IsEnabled="True"
+                         materialDesign:HintAssist.FloatingScale=".85"  
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid Margin="0 10 0 10">
+                    <!--AvartarUser-->
+                    <materialDesign:PackIcon Kind="Hotel"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Left"
+                                             Height="40" Margin="10 0 0 0"
+                                             Width="40"/>
+
+                    <!--Textbox nhập tên-->
+                    <TextBox Name="tbTypeRoom"
+                         FontSize="17"
+                         FontFamily="Sitka Subheading"
+                         Background="Transparent"
+                         Margin="70,0,10,0"
+                         BorderThickness="0,0,0,0.25"
+                         VerticalContentAlignment="Center" 
+                         KeyDown="textBox_KeyDown"
+                         materialDesign:HintAssist.Hint="Loại Phòng"
+                         Padding="1 0 0 0"
+                         IsEnabled="True"
+                         materialDesign:HintAssist.FloatingScale=".85"  
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="3">
+                <Grid Margin="0 10 0 10">
+                    <!--Avartar Pass-->
+                    <materialDesign:PackIcon Kind="Cards"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Left"
+                                             Height="40" Margin="10 0 0 0"
+                                             Width="40"/>
+
+                    <!--Textbox mật khẩu-->
+                    <TextBox Name="tbRateRoom"
+                         FontSize="17"
+                         FontFamily="Sitka Subheading"
+                         Background="Transparent"
+                         Margin="70,0,10,0"
+                         BorderThickness="0,0,0,0.25"
+                         VerticalContentAlignment="Center" 
+                         KeyDown="textBox_KeyDown"
+                         materialDesign:HintAssist.Hint="Giá Phòng"
+                         Padding="1 0 0 0"
+                         IsEnabled="True"
+                         materialDesign:HintAssist.FloatingScale=".85"  
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                   
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <Grid Margin="0 10 0 10">
+                    <!--AvartarUser-->
+                    <materialDesign:PackIcon Kind="DateRange"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Left"
+                                             Height="40" Margin="10 0 0 0"
+                                             Width="40"/>
+                    <DatePicker Grid.Row="2" Grid.Column="0"
+                            Margin="70 0 10 0"
+                            FontSize="15"
+                            FontFamily="Sitka Subheading"
+                            FontWeight="Bold"
+                            materialDesign:HintAssist.Hint="Ngày Đặt"
+                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                            Name="dateBookDatePicker"
+                            VerticalAlignment="Center"
+                            SelectedDateChanged="dateBookDatePicker_SelectedDateChanged">
+                    </DatePicker>
+                   
+                </Grid>
+
+            </Grid>
+
+            <Grid Grid.Row="5">
+                <Grid Margin="0 10 0 10">
+                    <!--AvartarUser-->
+                    <materialDesign:PackIcon Kind="DateRange"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Left"
+                                             Height="40" Margin="10 0 0 0"
+                                             Width="40"/>
+
+                    <DatePicker Grid.Row="2" Grid.Column="1"
+                            Margin="70 0 10 0"
+                            FontSize="15"
+                            FontFamily="Sitka Subheading"
+                            FontWeight="Bold"
+                            materialDesign:HintAssist.Hint="Ngày Rời Đi"
+                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                            Name="leavingDateDatePicker"
+                            VerticalAlignment="Center"
+                            SelectedDateChanged="leavingDateDatePicker_SelectedDateChanged">
+                    </DatePicker>
+
+                </Grid>
+
+            </Grid>
+
+            <Grid Grid.Row="6">
+                <!--Button đăng nhập-->
+                <Button Grid.Row="3"
+                        Name="btnBooking"
+                        FontSize="15"
+                        FontFamily="Sitka Subheading"
+                        Width="200"
+                        Height="35"
+                        Content="Đặt Phòng Ngay"
+                        VerticalAlignment="Center"
+                        Background="#21bf73"
+                        Style="{StaticResource EllipseButton}"
+                        Click="BtnBooking_Click">
+                    <!--Làm tròn cạnh button-->
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+            </Grid>
+
+        </Grid>
+    </Border>
+</Window>

@@ -53,6 +53,7 @@
         </Style>
 
         <Style TargetType="Grid" x:Key="roomStatus">
+            <Setter Property="Background" Value="Red"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=activate}" Value="True">
                     <Setter Property="Background" Value="#21bf73"/>
@@ -60,7 +61,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid Name="homeProduct">
+    <Grid Name="homeSearch">
         <Grid >
             <Grid.RowDefinitions>
 
@@ -113,7 +114,7 @@
 
             <!--Click="AddProductItem_Click"-->
             <!--thêm sản phảm-->
-            <Button x:Name="addProductButton"
+            <Button x:Name="addListRoomButton"
                     Grid.RowSpan="1"
                     Height="30"
                     Opacity="1"
@@ -121,9 +122,10 @@
                     HorizontalAlignment="Right"
                     Margin="0 0 50 0"
                     Background="#21bf73"
+                    Click="AddListRoomButton_Click"
                     Style="{StaticResource MaterialDesignRaisedButton}">
                 <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Add"/>
+                    <materialDesign:PackIcon Kind="Hotel"/>
                     <TextBlock Text="ĐẶT PHÒNG" 
                                FontSize="14"
                                FontFamily="Sitka Subheading" 
@@ -168,7 +170,7 @@
                                              FontSize="15"
                                              Padding="20 0 0 0"
                                              FontFamily="Sitka Subheading"
-                                             materialDesign:HintAssist.Hint="Search"
+                                             materialDesign:HintAssist.Hint="Tìm kiếm khách sạn..."
                                              VerticalContentAlignment="Center" 
                                              FontStyle="Italic"
                                              SelectionChanged="searchTextBox_SelectionChanged">
@@ -192,11 +194,12 @@
 
                         <!--Danh sách sản phẩm-->
 
-                        <Grid Grid.Row="0" Background="White">
-                            <ListView Name="productsListView" 
+                        <Grid Grid.Row="0" Background="#F0F2F5">
+                            <ListView Name="roomsListView" 
                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                                      ScrollViewer.VerticalScrollBarVisibility="Disabled" 
-                                      PreviewMouseLeftButtonUp="productsListView_PreviewMouseLeftButtonUp">
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                      PreviewMouseLeftButtonDown="roomsListView_PreviewMouseLeftButtonUp"
+                                      MouseDoubleClick="roomListView_MouseDoubleClick">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <UniformGrid Columns="4" Rows="2">
@@ -205,53 +208,56 @@
                                 </ListView.ItemsPanel>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid Background="White" Width="255" Height="238" >
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="7*"/>
-                                                <RowDefinition Height="0.9*"/>
-                                                <RowDefinition Height="1*"/>
-                                                <RowDefinition Height="0.8*"/>
-                                            </Grid.RowDefinitions>
-
-                                            <Image Source="{Binding Path=poster, Mode=OneTime}"
-                                                   RenderOptions.BitmapScalingMode="HighQuality"
-                                                   Stretch="UniformToFill"
-                                                   Grid.Row="0" Margin="0 0 0 10">
-                                            </Image>
-                                            <Grid Grid.Column="0"
+                                        <Border CornerRadius="10" Background="#fff">
+                                            <Grid Background="Transparent" Width="auto" Height="auto">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="7*"/>
+                                                    <RowDefinition Height="0.9*"/>
+                                                    <RowDefinition Height="1*"/>
+                                                    <RowDefinition Height="0.8*"/>
+                                                </Grid.RowDefinitions>
+                                                
+                                                
+                                                <Border CornerRadius="10" Grid.Row="0" Margin="10 10 10 10">
+                                                    <Image Source="{Binding Path=poster, Mode=OneTime}"
+                                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                                       Stretch="UniformToFill">
+                                                    </Image>
+                                                </Border>
+                                                
+                                                <Grid Grid.Column="0"
                                                   Opacity="1"
                                                   HorizontalAlignment="Left"
                                                   VerticalAlignment="Top"
-                                                  Margin="5 5 0 0"
-                                                  Background="Red"
+                                                  Margin="15 15 0 0"
                                                   Style="{StaticResource roomStatus}">
 
-                                                <StackPanel Orientation="Horizontal">
+                                                    <StackPanel Orientation="Horizontal">
                                                         <!--<materialDesign:PackIcon Kind="Cart" Margin="0 0 0 5"/>-->
-                                                    <TextBlock Text="{Binding Path=status, Mode=OneTime}" 
+                                                        <TextBlock Text="{Binding Path=status, Mode=OneTime}" 
                                                                FontSize="10"
                                                                FontFamily="Sitka Subheading" 
                                                                FontStyle="Italic"
                                                                Foreground="White"
                                                                Padding="5"/>
-                                                </StackPanel>
+                                                    </StackPanel>
 
-                                            </Grid>
-                                            <TextBlock Text="{Binding Path=roomType, Mode=OneTime}"
+                                                </Grid>
+                                                <TextBlock Text="{Binding Path=roomType, Mode=OneTime}"
                                                        FontSize="15" Margin="5 0 0 0"
                                                        TextTrimming="CharacterEllipsis"
                                                        FontFamily="Sitka Subheading" 
                                                        FontWeight="Bold"
                                                        Grid.Row="1"/>
-                                            <!--{Binding Path=typeRoom, Converter={StaticResource priceConverter}}-->
-                                            <Grid Grid.Row="2">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="1*" />
-                                                </Grid.ColumnDefinitions>
+                                                <!--{Binding Path=typeRoom, Converter={StaticResource priceConverter}}-->
+                                                <Grid Grid.Row="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1*" />
+                                                    </Grid.ColumnDefinitions>
 
-                                                <Grid Grid.Column="0">
-                                                    <TextBlock Text="{Binding Path=roomRate, Converter={StaticResource priceConverter}}"
+                                                    <Grid Grid.Column="0">
+                                                        <TextBlock Text="{Binding Path=roomRate, Converter={StaticResource priceConverter}}"
                                                        Margin="5 0 0 0"
                                                        TextTrimming="CharacterEllipsis" 
                                                        FontSize="17" FontWeight="Bold"
@@ -260,50 +266,52 @@
                                                         <Bold FontSize="11">
                                                             <Underline> đ</Underline>
                                                         </Bold>
-                                                    </TextBlock>
-                                                </Grid>
+                                                        </TextBlock>
+                                                    </Grid>
 
-                                                <Grid Grid.Column="1">
-                                                    <Button x:Name="addProductButton"
+                                                    <Grid Grid.Column="1">
+                                                        <Button x:Name="bookButton"
                                                         Opacity="1"
                                                         Foreground="White"
                                                         HorizontalAlignment="Right"
-                                                        Margin="0 0 3 0"
+                                                        Margin="0 0 8 0"
                                                         Background="#21bf73"
+                                                        Click="BookButton_Click"
                                                         Style="{StaticResource MaterialDesignRaisedButton}">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <!--<materialDesign:PackIcon Kind="Cart" Margin="0 0 0 5"/>-->
-                                                            <TextBlock Text="ĐẶT PHÒNG" 
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <!--<materialDesign:PackIcon Kind="Cart" Margin="0 0 0 5"/>-->
+                                                                <TextBlock Text="ĐẶT PHÒNG" 
                                                                 FontSize="10"
                                                                 FontFamily="Sitka Subheading" 
                                                                 FontStyle="Italic"
                                                                 Padding="0 0 0 5"/>
-                                                        </StackPanel>
-                                                    </Button>
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </Grid>
                                                 </Grid>
-                                            </Grid>
 
-                                            <Grid Grid.Row="3">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="1*" />
-                                                    <ColumnDefinition Width="2*" />
-                                                </Grid.ColumnDefinitions>
+                                                <Grid Grid.Row="3">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="1*" />
+                                                        <ColumnDefinition Width="2*" />
+                                                    </Grid.ColumnDefinitions>
 
-                                                <TextBlock Text="Ngày có thể đặt: "
+                                                    <TextBlock Text="Ngày có thể đặt: "
                                                        FontSize="11" Margin="5 0 0 5"
                                                        TextTrimming="CharacterEllipsis"
                                                        FontFamily="Sitka Subheading" 
                                                        FontStyle="Italic"
                                                        VerticalAlignment="Bottom"
                                                        Grid.Column="0"/>
-                                                <TextBlock Text="{Binding Path=dateBook, StringFormat=dd/MM/yyyy hh:mm, Mode=OneTime}"
+                                                    <TextBlock Text="{Binding Path=dateBook, StringFormat=dd/MM/yyyy hh:mm, Mode=OneTime}"
                                                        FontSize="15" Margin="5 0 0 0"
                                                        TextTrimming="CharacterEllipsis"
                                                        FontFamily="Sitka Subheading" 
                                                        Grid.Column="1"/>
 
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
+                                        </Border>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
@@ -362,7 +370,7 @@
                 </Grid>
             </Grid>
             <StatusBar Grid.ColumnSpan="2" Name="status" Grid.Row="2" Height="30" >
-                <Label Name="statusLabel" Content="dsadasdas" Padding="0 0 0 2" FontStyle="Italic"/>
+                <Label Name="statusLabel" Content="Trạng thái..." Padding="0 0 0 2" FontStyle="Italic"/>
             </StatusBar>
         </Grid>
 

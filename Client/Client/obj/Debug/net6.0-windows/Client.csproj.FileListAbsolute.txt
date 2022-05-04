@@ -35,3 +35,11 @@ C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\Registe
 C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\GeneratedInternalTypeHelper.g.cs
 C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\SearchScreen.g.cs
 C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\SearchScreen.baml
+C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\PopupScreen .g.cs
+C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\RoomDetails.g.cs
+C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\PopupScreen .baml
+C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\RoomDetails.baml
+C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\BookScreen.g.cs
+C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\PopupBookingScreen.g.cs
+C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\BookScreen.baml
+C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\PopupBookingScreen.baml

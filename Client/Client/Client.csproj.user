@@ -13,10 +13,22 @@
     <Compile Update="Utils\Message.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\BookScreen.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\LoginScreen.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\PopupBookingScreen.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\PopupScreen .xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\RegisterScreen.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\RoomDetails.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\SearchScreen.xaml.cs">
@@ -33,10 +45,22 @@
     <Page Update="Utils\Message.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\BookScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\LoginScreen.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\PopupBookingScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\PopupScreen .xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\RegisterScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RoomDetails.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\SearchScreen.xaml">

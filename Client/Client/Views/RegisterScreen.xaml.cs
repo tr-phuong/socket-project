@@ -67,11 +67,6 @@ namespace Client.Views
             if (e.ChangedButton == MouseButton.Left)
                 this.DragMove();
         }
-        private void btnSetting_Click(object sender, RoutedEventArgs e)
-        {
-            //var screen = new SettingScrenn();
-            //screen.ShowDialog();
-        }
 
         private void btnResgister_Click(object sender, RoutedEventArgs e)
         {

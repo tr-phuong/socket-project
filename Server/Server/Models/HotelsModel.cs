@@ -20,7 +20,9 @@ namespace Server.Models
                 con.Open();
                 if (con.State == ConnectionState.Open)
                 {
-                    string sql = String.Format(@"select r.id as id, r.room_type, r.room_rate, date_book, r.description, r.poster, r.status, r.activate from hotels h join rooms r on h.id = r.hotel_id where h.""name"" ILIKE '%{0}%';", name);
+                    string sql = String.Format(@"SELECT r.id AS id, r.room_type, r.room_rate, date_book, r.poster, r.status, r.activate, h.id AS hotel_id, h.""name"" 
+                                                FROM hotels h JOIN rooms r ON h.id = r.hotel_id
+                                                WHERE h.""name"" ILIKE '%{0}%';", name);
 
                     using (NpgsqlCommand command = new NpgsqlCommand(sql, con))
                     {
@@ -34,8 +36,9 @@ namespace Server.Models
                             entity.dateBook = reader.GetDateTime("date_book");
                             entity.poster = reader.GetString("poster");
                             entity.status = reader.GetString("status");
-                            entity.description = reader.GetString("description");
                             entity.activate = reader.GetBoolean("activate");
+                            entity.hotels.id = reader.GetInt32("hotel_id");
+                            entity.hotels.name = reader.GetString("name");
 
                             listRoomsOfHotel.Add(entity);
                         }

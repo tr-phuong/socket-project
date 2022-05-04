@@ -15,7 +15,7 @@
         MinWidth="1000"
         Background="{x:Null}"
         Loaded="Dashboard_Loaded">
-    <Grid Background="White">
+    <Grid Background="#F0F2F5">
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
             <RowDefinition Height="*"/>
@@ -44,13 +44,13 @@
                                 <Border CornerRadius="25" BorderThickness="1" BorderBrush="Black" 
                                             VerticalAlignment="Center" 
                                             Width="16" Height="16">
-                                    <!--<Border.Background>
+                                    <Border.Background>
                                         <ImageBrush ImageSource="/Views/Images/User.png" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                    </Border.Background>-->
+                                    </Border.Background>
                                 </Border>
                                 <!--<materialDesign:PackIcon Kind="User" Height="20" Width="20"  HorizontalAlignment="Left" VerticalAlignment="Center"/>-->
                             </MenuItem.Icon>
-                            <MenuItem Header="{Binding Path=Role}" FontFamily="Sitka Subheading" ToolTip="Quyền hạng">
+                            <MenuItem Header="Xem hồ sơ" FontFamily="Sitka Subheading" ToolTip="Xem hồ sơ thông tin cá nhân">
 
                             </MenuItem>
                             <Separator/>

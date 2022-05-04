@@ -1,4 +1,5 @@
-﻿using Client.entities;
+﻿using Client.DTO;
+using Client.entities;
 using Client.Receive;
 using Client.Utils;
 using System;
@@ -23,18 +24,14 @@ namespace Client.Views
     /// </summary>
     public partial class SearchScreen : UserControl
     {
-        List<Product> products = new List<Product>();
+
+        //delegate cho screen hóa đơn
+        public delegate void PickRoom(RoomDTO Data);
+        public PickRoom PickRoomId;
+
         public SearchScreen()
         {
             InitializeComponent();
-
-
-            //for (int i = 0; i < 5; i++)
-            //{
-            //    products.Add(new Product(i, "Khach san 5 sao", "Giuong doi", "Co hai giuong", DateTime.Now, "image"));
-            //}
-
-            //productsListView.ItemsSource = products.ToList();
         }
 
         /// <summary>
@@ -45,15 +42,15 @@ namespace Client.Views
         private void backWard_Click(object sender, RoutedEventArgs e)
         {
             // nếu Pick sản phẩm để tạo hóa đơn
-            //if (PickProductId != null)
-            //{
-            //    homeProduct.Children.Clear();
-            //}
-            //else
-            //{
-            //    homeProduct.Children.Clear();
-            //    homeProduct.Children.Add(new HomeScreen(_connectionString));
-            //}
+            if (PickRoomId != null)
+            {
+                homeSearch.Children.Clear();
+            }
+            else
+            {
+                //homeProduct.Children.Clear();
+                //homeProduct.Children.Add(new MainWindow());
+            }
 
         }
         /// <summary>
@@ -92,7 +89,7 @@ namespace Client.Views
             SendData<String> sendData = new SendData<String>(Actions.SHOW_LIST, "aaa", name);
             int byteSent = SocketUtils.send(sendData);
             ReceiveListData receiveListData = SocketUtils.receiveListRooms();
-            productsListView.ItemsSource = receiveListData.listData.ToList();
+            roomsListView.ItemsSource = receiveListData.listData.ToList();
         }
         /// <summary>
         /// Nhân giá trị text trong khung Search
@@ -107,10 +104,28 @@ namespace Client.Views
             }
             statusLabel.Content = "Search";
         }
-
         private void productsListView_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            statusLabel.Content = "Detail product";
+            statusLabel.Content = "Thông tin chi tiết phòng";
+            dynamic itemRoom = (sender as ListView).SelectedItem;
+            if(itemRoom != null)
+            {
+                int id = itemRoom.id;
+                SendData<int> sendData = new SendData<int>(Actions.DETAIL_ROOM, "aaa", id);
+                int byteSent = SocketUtils.send(sendData);
+                ReceiveData<RoomsEntity> receiveData = SocketUtils.receiveRoom();
+                RoomsEntity roomsEntity = (RoomsEntity)receiveData.data;
+
+
+                PopupScreen popupScreen = new PopupScreen(roomsEntity, receiveData.action);
+                popupScreen.Show();
+            }
+
+
+
+
+
+
             //var db = new MyShopEntities(_connectionString);
             //dynamic itemProduct = (sender as ListView).SelectedItem;
 
@@ -135,24 +150,57 @@ namespace Client.Views
 
         }
 
-    }
-    public class Product
-    {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string typeRoom { get; set; }
-        public string description { get; set; }
-        public DateTime dateTime { get; set; }
-        public string image { get; set; }
 
-        public Product(int id, string name, string typeRoom, string description, DateTime date, string image)
+        private void BookButton_Click(object sender, RoutedEventArgs e)
         {
-            this.id = id;
-            this.name = name;
-            this.typeRoom = typeRoom;
-            this.description = description;
-            this.dateTime = date;
-            this.image = image;
+            PopupBookingScreen popupBookingScreen = new PopupBookingScreen(lastPick);
+            popupBookingScreen.ShowDialog();
+        }
+
+        private void roomListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            statusLabel.Content = "Thông tin chi tiết phòng";
+            RoomsEntity itemRoom = (RoomsEntity)(sender as ListView).SelectedItem;
+            if (itemRoom != null)
+            {
+                if (PickRoomId != null)
+                {
+                    RoomDTO roomDTO = new RoomDTO();
+                    roomDTO.id = itemRoom.id;
+                    roomDTO.roomType = itemRoom.roomType;
+                    roomDTO.roomRate = itemRoom.roomRate;
+                    roomDTO.hotel.name = itemRoom.hotels.name;
+                    roomDTO.hotel.id = itemRoom.hotels.id;
+
+                    PickRoomId.Invoke(roomDTO);
+                    homeSearch.Children.Clear();
+                }
+                else
+                {
+                    int id = itemRoom.id;
+                    SendData<int> sendData = new SendData<int>(Actions.DETAIL_ROOM, "aaa", id);
+                    int byteSent = SocketUtils.send(sendData);
+                    ReceiveData<RoomsEntity> receiveData = SocketUtils.receiveRoom();
+                    RoomsEntity roomsEntity = (RoomsEntity)receiveData.data;
+
+
+                    PopupScreen popupScreen = new PopupScreen(roomsEntity, receiveData.action);
+                    popupScreen.Show();
+                }
+            }
+        }
+
+        private RoomsEntity lastPick = new RoomsEntity();
+
+        private void roomsListView_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            lastPick = (RoomsEntity)(sender as ListView).SelectedItem;
+        }
+
+        private void AddListRoomButton_Click(object sender, RoutedEventArgs e)
+        {
+            BookScreen bookScreen = new BookScreen();
+            homeSearch.Children.Add(bookScreen);
         }
     }
 }

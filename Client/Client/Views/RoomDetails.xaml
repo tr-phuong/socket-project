@@ -1,0 +1,172 @@
+﻿<UserControl x:Class="Client.Views.RoomDetails"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:Client.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="750" d:DesignWidth="850">
+    <UserControl.Resources>
+        <!--<converter:PriceConverter x:Key="PriceConverter"/>-->
+    </UserControl.Resources>
+    <Grid x:Name="createOrdersScreen">
+        <Grid Background="#FFFAFAFA">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.23*"/>
+                <RowDefinition Height="0.23*"/>
+                <RowDefinition Height="0.23*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.4*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Row="0" Grid.Column="1"
+                     materialDesign:HintAssist.Hint="Loại Phòng"
+                     FontSize="15"
+                     Background="Transparent"
+                     FontFamily="Sitka Subheading"
+                     FontWeight="Bold"
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     Name="roomTypeTextBox"
+                     VerticalAlignment="Center"
+                     />
+            <!--PreviewTextInput="NumberOnly_PreviewTextInput"-->
+            <!--TextChanged="customerPhoneTextBox_TextChanged"-->
+
+            <!--Tên khách hàng-->
+            <TextBox Grid.Row="1" Grid.Column="1"
+                     materialDesign:HintAssist.Hint="Ngày Có Thể Đặt"
+                     FontSize="15"
+                     Background="Transparent"
+                     FontFamily="Sitka Subheading"
+                     FontWeight="Bold"
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     Name="dateBookTextBox"
+                     VerticalAlignment="Center"/>
+
+            
+            <!--SDT-->
+            <TextBox Grid.Row="2" Grid.Column="1"
+                     materialDesign:HintAssist.Hint="Giá Phòng"
+                     FontSize="15"
+                     Background="Transparent"
+                     FontFamily="Sitka Subheading"
+                     FontWeight="Bold"
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     Name="roomRateTextBox"
+                     VerticalAlignment="Center"
+                    />
+
+            <!--PreviewTextInput="NumberOnly_PreviewTextInput"-->
+            <!--TextChanged="customerPhoneTextBox_TextChanged"-->
+            <!--Ảnh sản phẩm-->
+            <Border Grid.Column="0"
+                    Grid.Row="0" Grid.RowSpan="3"
+                    CornerRadius="15"
+                    Background="White"
+                    Margin="15 10 30 0">
+                <Border.Effect>
+                    <DropShadowEffect
+                                    Color="Black"
+                                    Direction="270"
+                                    ShadowDepth="1"
+                                    BlurRadius="10"/>
+                </Border.Effect>
+                <Image Stretch="Fill"
+                       Name="imgProduct"
+                       Source="{Binding Path=poster, Mode=OneTime}">
+                </Image>
+            </Border>
+
+            <Grid Grid.Row="3" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.1*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Label  Grid.Row="0"
+                   Margin="10 0 0 0"
+                   Content="Mô tả"
+                   FontSize="15"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Bottom"
+                   Background="Transparent"
+                   FontFamily="Sitka Subheading"/>
+                
+                <StackPanel  Grid.Row="1" Orientation="Horizontal" >
+                    <TextBlock
+                       Margin="10 0 0 0"
+                       FontSize="13"
+                       HorizontalAlignment="Left"
+                       Background="Transparent"
+                       FontFamily="Sitka Subheading">
+                         <Run FontWeight="Bold">Kích thước phòng 12 m² </Run> <LineBreak/>
+                            1 giường đôi lớn <LineBreak/>
+                            Giường thoải mái, 7.3 – Dựa trên 10 đánh giá <LineBreak/>
+                            Phòng Giường Đôi này có truyền hình vệ tinh và minibar. <LineBreak/>
+                         <LineBreak/>
+                         <Run FontWeight="Bold"> Trong phòng tắm riêng của bạn: </Run><LineBreak/>
+                            Đồ vệ sinh cá nhân miễn phí <LineBreak/>
+                            Nhà vệ sinh <LineBreak/>
+                            Bồn tắm hoặc Vòi sen <LineBreak/>
+                            Khăn tắm <LineBreak/>
+                            Máy sấy tóc <LineBreak/>
+                            Giấy vệ sinh <LineBreak/>
+                    </TextBlock>
+                    <TextBlock
+                       Margin="10 0 0 0"
+                       FontSize="13"
+                       HorizontalAlignment="Left"
+                       Background="Transparent"
+                       FontFamily="Sitka Subheading">
+                         <Run FontWeight="Bold">Tiện nghi phòng: </Run><LineBreak/>
+                            Nước rửa tay <LineBreak/>
+                            Minibar <LineBreak/>
+                            Điều hòa không khí <LineBreak/>
+                            Lối vào riêng <LineBreak/>
+                            Quạt máy <LineBreak/>
+                            Thiết bị báo carbon monoxide <LineBreak/>
+                            Ấm đun nước điện <LineBreak/>
+                            Bàn làm việc  <LineBreak/>
+                            TV <LineBreak/>
+                            Điện thoại <LineBreak/>
+                            TV màn hình phẳng <LineBreak/>
+                            Truyền hình cáp <LineBreak/>
+                            Máy lọc không khí <LineBreak/>
+                            Ổ điện gần giường <LineBreak/>
+                            Dịch vụ báo thức <LineBreak/>
+                            Máy điều hòa độc lập cho từng phòng <LineBreak/>
+                            Hút thuốc: ​Không hút thuốc <LineBreak/>
+                    </TextBlock>
+
+                    <TextBlock
+                       Margin="10 0 0 0"
+                       FontSize="13"
+                       HorizontalAlignment="Left"
+                       Background="Transparent"
+                       FontFamily="Sitka Subheading">
+                        <Run FontWeight="Bold">Hướng tầm nhìn: </Run><LineBreak/>
+                            Tầm nhìn ra khung cảnh <LineBreak/>
+                            <LineBreak/>
+                        <Run FontWeight="Bold"> Chỗ đậu xe: ​</Run><LineBreak/>
+                             Không có chỗ đỗ xe. <LineBreak/>
+                    </TextBlock>
+                </StackPanel>
+                
+            </Grid>
+
+
+            <!--Progressbar loading-->
+            <ProgressBar Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="4" Grid.Column="2"
+                         Width="25" Height="25"
+                         Style="{StaticResource MaterialDesignCircularProgressBar}"
+                         x:Name="ProgressBar">
+            </ProgressBar>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

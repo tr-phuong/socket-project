@@ -22,9 +22,11 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(string username)
         {
             InitializeComponent();
+            infoAccount.DataContext = username;
+            Application.Current.Properties["username"] = username;
         }
         private void Dashboard_Loaded(object sender, RoutedEventArgs e)
         {
@@ -40,6 +42,10 @@ namespace Client
             Button curButton = sender as Button;
             if (curButton.Tag.Equals("btnClose"))
             {
+                string exitStr = "Close";
+                SendData<String> sendData = new SendData<String>(Actions.EXIT, "aaa", exitStr);
+                int byteSent = SocketUtils.send(sendData);
+
                 // close connect
                 SocketUtils.close();
                 this.Close();

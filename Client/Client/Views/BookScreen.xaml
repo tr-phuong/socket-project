@@ -1,0 +1,503 @@
+﻿<UserControl x:Class="Client.Views.BookScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converter="clr-namespace:Client.Utils"
+             xmlns:local="clr-namespace:Client.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="720" d:DesignWidth="1100">
+    <UserControl.Resources>
+        <converter:PriceConverter x:Key="PriceConverter"/>
+        <converter:DataConverter x:Key="IndexConverter"/>
+    </UserControl.Resources>
+    <Grid x:Name="createOrdersScreen">
+        <Grid Background="#FFFAFAFA">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="0.6*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Nút backward-->
+            <Button HorizontalAlignment="Left"
+                    Background="Transparent"
+                    BorderBrush="#303030"
+                    VerticalAlignment="Top"
+                    Height="30" Width="30"
+                    Click="backWard_Click"
+                    Style="{StaticResource MaterialDesignIconForegroundButton}"
+                    Margin="10 5 0 0">
+                <materialDesign:PackIcon Kind="KeyboardArrowLeft"
+                                             Height="30"
+                                             Width="30" />
+            </Button>
+
+            <Label Content="Tìm kiếm"
+                   FontSize="13"
+                   Height="20"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Margin="37 10 0 0"
+                   FontFamily="Sitka Subheading" 
+                   FontStyle="Italic"
+                   Foreground="#FF848585"/>
+
+            <!--Tiêu đề-->
+            <Label Content="ĐẶT PHÒNG"
+                   FontFamily="Sitka Subheading"
+                   Height="25"
+                   FontSize="22"
+                   Padding="0"
+                   FontWeight="Bold"
+                   VerticalAlignment="Top"
+                   Name="Title"
+                   HorizontalAlignment="Center"
+                   Grid.ColumnSpan="3"/>
+
+
+            <materialDesign:PackIcon Kind="Hotel" Grid.Row="2"
+                                     Width="30" Height="30"
+                                     Foreground="#21bf73" Margin="10 25 0 0"/>
+            <!--Thêm sản phẩm vào list product-->
+            <Button x:Name="btnAddToListProduct"
+                    Width="210"
+                    Grid.Column="1"
+                    Grid.Row="3"
+                    Height="30"
+                    Opacity="1"
+                    Foreground="White"
+                    Background="#21bf73"
+                    Visibility="Hidden"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Add"/>
+                    <TextBlock Text="ADD TO PRODUCT LIST" 
+                               FontSize="14"
+                               FontFamily="Sitka Subheading" 
+                               FontStyle="Italic"
+                               Margin="10 0 0 0"/>
+                </StackPanel>
+            </Button>
+
+            <!--Danh sách sản phẩm-->
+            <ListView Name="listRooms" Grid.Row="1"
+                      FontFamily="Sitka Subheading"
+                      FontSize="13"
+                      Margin="3 8 3 40"
+                      Foreground="Black"
+                      PreviewMouseLeftButtonUp="ListRoom_PreviewMouseLeftButtonUp"
+                      HorizontalAlignment="Stretch">
+                <!--<ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" Value="#D3D3D3" />
+                                <Setter Property="Foreground" Value="Blue" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="true">
+                                <Setter Property="Background" Value="#D3D3D3" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>-->
+                <ListView.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                        <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                    </Style>
+                    <Style TargetType="{x:Type ScrollBar}">
+                        <Setter Property="Margin" Value="2,50,0,8" />
+                        <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                    <Track IsDirectionReversed="true" Focusable="false">
+                                        <Track.Thumb>
+                                            <Thumb Width="8" Background="#21bf73"/>
+                                        </Track.Thumb>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
+                                        </Track.IncreaseRepeatButton>
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                                        </Track.DecreaseRepeatButton>
+                                    </Track>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.Resources>
+
+                <!--Thiết kế các cột-->
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn  Header="No">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Width="20" >
+                                        <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Converter={StaticResource IndexConverter}}"
+                                                   FontSize="12"
+                                                   TextTrimming="CharacterEllipsis" 
+                                                   FontFamily="calibri">
+                                        </TextBlock>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <!--Cột Tên sản phẩm-->
+                        <GridViewColumn>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Tên Khách Sạn"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding hotel.name}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <!--Cột số lượng-->
+                        <GridViewColumn>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Loại Phòng"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding roomType}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <!--Cột Tên sản phẩm-->
+                        <GridViewColumn>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Tiền Phòng"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding roomRate, Converter={StaticResource priceConverter}}" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Ngày Đặt"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding dateBook, StringFormat='{}{0:MM/dd/yyyy h:mm tt}'}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Ngày Rời Đi"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding leavingDate, StringFormat='{}{0:MM/dd/yyyy h:mm tt}'}" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn
+                        DisplayMemberBinding="{Binding note}">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Ghi Chú"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+
+            </ListView>
+
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Mã sản phẩm-->
+                <TextBox Grid.Row="0"
+                     materialDesign:HintAssist.Hint="Chọn Khách Sạn"
+                     Foreground="Red"
+                     FontSize="15"
+                     IsReadOnly="True"
+                     Background="Transparent"
+                     FontFamily="Sitka Subheading"
+                     FontWeight="Bold"
+                     PreviewMouseUp="selectRoom_MouseUp"
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     Name="hotelNameTextBox"
+                     VerticalAlignment="Center"
+                     Margin="50 0 20 0"/>
+
+
+                <TextBox Grid.Row="0"
+                         Grid.Column="1"
+                         Margin="30 0 30 0"
+                         materialDesign:HintAssist.Hint="Loại Phòng"
+                         FontSize="15"
+                         Background="Transparent"
+                         FontFamily="Sitka Subheading"
+                         FontWeight="Bold"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Name="typeRoomTextBox"
+                         VerticalAlignment="Center"/>
+
+                <TextBox Grid.Row="1"
+                         Grid.Column="0"
+                         materialDesign:HintAssist.Hint="Giá Phòng"
+                         Margin="30 0 30 0"
+                         FontSize="15"
+                         Background="Transparent"
+                         FontFamily="Sitka Subheading"
+                         FontWeight="Bold"
+                         PreviewTextInput="NumberOnly_PreviewTextInput"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Name="rateRoomTextBox"
+                         VerticalAlignment="Center"
+                         TextChanged="rateRoomTextBox_TextChanged"/>
+
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         materialDesign:HintAssist.Hint="Ghi Chú"
+                         Margin="30 0 30 0"
+                         FontSize="15"
+                         Background="Transparent"
+                         FontFamily="Sitka Subheading"
+                         FontWeight="Bold"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Name="noteRoomTextBox"
+                         VerticalAlignment="Center"/>
+
+                <!--Từ ngày-->
+                <DatePicker Grid.Row="2" Grid.Column="0"
+                            Margin="30 0 30 0"
+                            FontSize="15"
+                            FontFamily="Sitka Subheading"
+                            FontWeight="Bold"
+                            materialDesign:HintAssist.Hint="Ngày Đặt"
+                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                            Name="dateBookDatePicker"
+                            VerticalAlignment="Center"
+                            SelectedDateChanged="dateBookDatePicker_SelectedDateChanged">
+                </DatePicker>
+
+                <!--Từ ngày-->
+                <DatePicker Grid.Row="2" Grid.Column="1"
+                            Margin="30 0 30 0"
+                            FontSize="15"
+                            FontFamily="Sitka Subheading"
+                            FontWeight="Bold"
+                            materialDesign:HintAssist.Hint="Ngày Rời Đi"
+                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                            Name="leavingDateDatePicker"
+                            VerticalAlignment="Center"
+                            SelectedDateChanged="leavingDateDatePicker_SelectedDateChanged">
+                </DatePicker>
+
+            </Grid>
+
+            <!--Tổng tiền-->
+            <Label Content="Tổng Tiền" Grid.Row="1"
+                   Grid.Column="3"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   FontFamily="Sitka Subheading"
+                   FontSize="15"
+                   FontWeight="Bold"
+                   Margin="0 5 160 0"/>
+            <TextBlock Grid.Row="1"
+                       Text="0 đ"
+                       x:Name="sumTotalOfProduct"
+                       FontSize="14"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Bottom" 
+                       Foreground="Red"
+                       FontStyle="Italic"
+                       Margin="0 0 50 10"/>
+
+            <Button x:Name="btncancel"
+                    Content="Remove"
+                    Width="100"
+                    Grid.Column="2"
+                    Grid.Row="4"
+                    Height="30"
+                    FontFamily="Sitka Subheading" 
+                    Opacity="1"
+                    Foreground="White"
+                    Background="#21bf73"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="50 8 0 0"
+                    Visibility="Hidden"
+                    Click="btncancel_Click"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+            </Button>
+
+            <!--Progressbar loading-->
+            <ProgressBar Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="4" Grid.Column="2"
+                         Width="25" Height="25"
+                         Style="{StaticResource MaterialDesignCircularProgressBar}"
+                         x:Name="ProgressBar">
+            </ProgressBar>
+
+            <!--Button xác nhận-->
+            <Button Grid.Column="2"
+                    Grid.Row="7"
+                    Margin="0 0 20 0"
+                    HorizontalAlignment="Right"
+                    Width="150" Content="ĐẶT PHÒNG"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Background="#21bf73"
+                    FontSize="15"
+                    FontFamily="Sitka Subheading"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Click="BtnConfirm_Click"
+                    Name="btnConfirm"/>
+
+            <!--Button xem danh sách orders-->
+            <Button Grid.Row="2"
+                    Width="200" 
+                    Height="33"
+                    Content="Thêm Phòng"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Background="#21bf73"
+                    FontSize="15"
+                    FontFamily="Sitka Subheading"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Click="BtnAddNewRoom_Click"
+                    Name="btnAddNewRoom" 
+                    FontStyle="Italic"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    Margin="0 4 10 0"/>
+
+            <!--Button làm mới-->
+            <Button Grid.Row="7"
+                    Grid.Column="3"
+                    HorizontalAlignment="Right"
+                    Width="100" Content="HUỶ"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Background="#21bf73"
+                    FontSize="15"
+                    Margin="0 0 190 0"
+                    FontFamily="Sitka Subheading"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Click="backWard_Click"/>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

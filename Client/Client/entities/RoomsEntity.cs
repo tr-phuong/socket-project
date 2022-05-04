@@ -12,6 +12,7 @@ namespace Client.entities
         public string roomType { get; set; }
         public int roomRate { get; set; }
         public DateTime dateBook { get; set; }
+        public HotelsEntity hotels { get; set; }
         public string poster { get; set; }
         public string description { get; set; }
         public string status { get; set; }
