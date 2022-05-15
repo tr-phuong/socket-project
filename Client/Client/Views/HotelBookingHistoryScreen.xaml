@@ -1,0 +1,308 @@
+﻿<UserControl x:Class="Client.Views.HotelBookingHistoryScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converter="clr-namespace:Client.Utils"
+             xmlns:local="clr-namespace:Client.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="720" d:DesignWidth="1100">
+    <UserControl.Resources>
+        <converter:PriceConverter x:Key="PriceConverter"/>
+        <converter:DataConverter x:Key="IndexConverter"/>
+    </UserControl.Resources>
+    <Grid Name="hotelBookingHistory">
+        <Grid Background="#FFFAFAFA">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="8*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <!--Nút backward-->
+                <Button HorizontalAlignment="Left"
+                    Background="Transparent"
+                    BorderBrush="#303030"
+                    VerticalAlignment="Top"
+                    Height="30" Width="30"
+                    Click="backWard_Click"
+                    Style="{StaticResource MaterialDesignIconForegroundButton}"
+                    Margin="10 5 0 0">
+                    <materialDesign:PackIcon Kind="KeyboardArrowLeft"
+                                             Height="30"
+                                             Width="30" />
+                </Button>
+
+                <Label Content="Tìm kiếm"
+                   FontSize="13"
+                   Height="20"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Margin="37 10 0 0"
+                   FontFamily="Sitka Subheading" 
+                   FontStyle="Italic"
+                   Foreground="#FF848585"/>
+            </Grid>
+            <!--Danh sách sản phẩm-->
+            <ListView Name="listRooms" Grid.Row="1"
+                      FontFamily="Sitka Subheading"
+                      FontSize="13"
+                      Margin="3 8 3 5"
+                      Foreground="Black"
+                      HorizontalAlignment="Stretch">
+                <ListView.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                        <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                    </Style>
+                    <Style TargetType="{x:Type ScrollBar}">
+                        <Setter Property="Margin" Value="2,50,0,8" />
+                        <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                    <Track IsDirectionReversed="true" Focusable="false">
+                                        <Track.Thumb>
+                                            <Thumb Width="8" Background="#21bf73"/>
+                                        </Track.Thumb>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
+                                        </Track.IncreaseRepeatButton>
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                                        </Track.DecreaseRepeatButton>
+                                    </Track>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.Resources>
+
+                <!--Thiết kế các cột-->
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn  Header="No">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Width="20" >
+                                        <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Converter={StaticResource IndexConverter}}"
+                                                   FontSize="12"
+                                                   TextTrimming="CharacterEllipsis" 
+                                                   FontFamily="calibri">
+                                        </TextBlock>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <!--Cột Tên sản phẩm-->
+                        <GridViewColumn Width="170">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Tên Khách Sạn"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding hotelsEntity.name}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <!--Cột số lượng-->
+                        <GridViewColumn Width="200">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Loại Phòng"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock 
+                                        TextWrapping="Wrap" 
+                                        TextTrimming="CharacterEllipsis"
+                                        FontFamily="Sitka Subheading" 
+                                        Text="{Binding roomsEntity.roomType}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <!--Cột Tên sản phẩm-->
+                        <GridViewColumn Width="100">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Tiền"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <!--, Converter={StaticResource priceConverter}-->
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding roomsEntity.roomRate}" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Ngày Đặt"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding bookingDate, StringFormat='{}{0:MM/dd/yyyy h:mm tt}'}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Ngày Rời Đi"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding leavingDate, StringFormat='{}{0:MM/dd/yyyy h:mm tt}'}" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn
+                        DisplayMemberBinding="{Binding note}">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Ghi Chú"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                            Color="White"
+                                            Direction="270"
+                                            ShadowDepth="1"
+                                            BlurRadius="5"/>
+                                        </Border.Effect>
+                                        <Label Content="Hủy Phòng"
+                                       Padding="1"
+                                       FontSize="15"
+                                       Foreground="Black"
+                                       FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#00fff0"
+                                            BorderThickness="0.5"
+                                            Background="#00d1ff"
+                                            CornerRadius="25"
+                                            Width="20"
+                                            Height="20"
+                                            MouseUp="deleteRoom_MouseUp"
+                                            Margin="0 0 5 0"
+                                            Style="{StaticResource MaterialDesignToolBarMainPanelBorderStyle}">
+                                        <materialDesign:PackIcon Name="deleteOrderMouseUp"
+                                                                 HorizontalAlignment="Center"
+                                                                 VerticalAlignment="Center"
+                                                                 Kind="Delete"
+                                                                 Width="17"
+                                                                 Height="17"
+                                                                 Foreground="#ff4646"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+
+                    </GridView>
+                </ListView.View>
+
+            </ListView>
+        </Grid>
+    </Grid>
+</UserControl>

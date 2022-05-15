@@ -16,6 +16,9 @@
     <Compile Update="Views\BookScreen.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\HotelBookingHistoryScreen.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\LoginScreen.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -46,6 +49,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\BookScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\HotelBookingHistoryScreen.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\LoginScreen.xaml">

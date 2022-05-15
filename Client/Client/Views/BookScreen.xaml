@@ -12,7 +12,7 @@
         <converter:PriceConverter x:Key="PriceConverter"/>
         <converter:DataConverter x:Key="IndexConverter"/>
     </UserControl.Resources>
-    <Grid x:Name="createOrdersScreen">
+    <Grid x:Name="bookScreen">
         <Grid Background="#FFFAFAFA">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>
@@ -86,12 +86,12 @@
             </Button>
 
             <!--Danh sách sản phẩm-->
+            <!--PreviewMouseLeftButtonUp="ListRoom_PreviewMouseLeftButtonUp"-->
             <ListView Name="listRooms" Grid.Row="1"
                       FontFamily="Sitka Subheading"
                       FontSize="13"
                       Margin="3 8 3 40"
                       Foreground="Black"
-                      PreviewMouseLeftButtonUp="ListRoom_PreviewMouseLeftButtonUp"
                       HorizontalAlignment="Stretch">
                 <!--<ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -154,7 +154,7 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <!--Cột Tên sản phẩm-->
-                        <GridViewColumn>
+                        <GridViewColumn Width="170">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <Border>
@@ -175,13 +175,13 @@
                             </GridViewColumn.HeaderTemplate>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock TextWrapping="Wrap" Text="{Binding hotel.name}" />
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding hotelsEntity.name}" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
                         <!--Cột số lượng-->
-                        <GridViewColumn>
+                        <GridViewColumn Width="200">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <Border>
@@ -202,13 +202,17 @@
                             </GridViewColumn.HeaderTemplate>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock TextWrapping="Wrap" Text="{Binding roomType}" />
+                                    <TextBlock 
+                                        TextWrapping="Wrap" 
+                                        TextTrimming="CharacterEllipsis"
+                                        FontFamily="Sitka Subheading" 
+                                        Text="{Binding roomsEntity.roomType}" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
                         <!--Cột Tên sản phẩm-->
-                        <GridViewColumn>
+                        <GridViewColumn Width="100">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <Border>
@@ -219,7 +223,7 @@
                                             ShadowDepth="1"
                                             BlurRadius="5"/>
                                         </Border.Effect>
-                                        <Label Content="Tiền Phòng"
+                                        <Label Content="Tiền"
                                        Padding="1"
                                        FontSize="15"
                                        Foreground="Black"
@@ -229,7 +233,8 @@
                             </GridViewColumn.HeaderTemplate>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock TextWrapping="Wrap" Text="{Binding roomRate, Converter={StaticResource priceConverter}}" HorizontalAlignment="Center"/>
+                                    <!--, Converter={StaticResource priceConverter}-->
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding roomsEntity.roomRate}" HorizontalAlignment="Center"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -307,6 +312,32 @@
                                 </DataTemplate>
                             </GridViewColumn.HeaderTemplate>
                         </GridViewColumn>
+
+                        <GridViewColumn Width="40" >
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#00fff0"
+                                            BorderThickness="0.5"
+                                            Background="#00d1ff"
+                                            CornerRadius="25"
+                                            Width="20"
+                                            Height="20"
+                                            MouseUp="cannelRoom_MouseUp"
+                                            Margin="0 0 5 0"
+                                            Style="{StaticResource MaterialDesignToolBarMainPanelBorderStyle}">
+                                        <materialDesign:PackIcon Name="deleteOrderMouseUp"
+                                                                 HorizontalAlignment="Center"
+                                                                 VerticalAlignment="Center"
+                                                                 Kind="Close"
+                                                                 Width="17"
+                                                                 Height="17"
+                                                                 Foreground="#ff4646"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+
                     </GridView>
                 </ListView.View>
 
@@ -334,6 +365,7 @@
                      FontFamily="Sitka Subheading"
                      FontWeight="Bold"
                      PreviewMouseUp="selectRoom_MouseUp"
+                     SelectionChanged="hotelNameTextBox_SelectionChanged"
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      Name="hotelNameTextBox"
                      VerticalAlignment="Center"
@@ -417,7 +449,7 @@
                    Margin="0 5 160 0"/>
             <TextBlock Grid.Row="1"
                        Text="0 đ"
-                       x:Name="sumTotalOfProduct"
+                       x:Name="sumTotalOfRoom"
                        FontSize="14"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Bottom" 

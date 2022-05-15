@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,6 +29,7 @@ namespace Client.Views
         //delegate cho screen hóa đơn
         public delegate void PickRoom(RoomDTO Data);
         public PickRoom PickRoomId;
+        private const Int32 TIMEOUT = 10000;
 
         public SearchScreen()
         {
@@ -89,6 +91,11 @@ namespace Client.Views
             SendData<String> sendData = new SendData<String>(Actions.SHOW_LIST, "aaa", name);
             int byteSent = SocketUtils.send(sendData);
             ReceiveListData receiveListData = SocketUtils.receiveListRooms();
+            if(receiveListData.listData.Count > 0)
+            {
+                header.Text = "Tên khách sạn được tìm kiếm: ";
+                nameHotel.Text = receiveListData.listData[0].hotels.name;
+            }
             roomsListView.ItemsSource = receiveListData.listData.ToList();
         }
         /// <summary>
@@ -96,13 +103,22 @@ namespace Client.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void searchTextBox_SelectionChanged(object sender, RoutedEventArgs e)
+        private async void searchTextBox_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            if(!"".Equals(searchTextBox.Text))
+            statusLabel.Content = "Search";
+            Thread getItemRooms = new Thread(() => {
+                Thread.Sleep(TIMEOUT);
+            });
+            getItemRooms.Start();
+
+            if (!"".Equals(searchTextBox.Text))
             {
                 searchChange();
             }
-            statusLabel.Content = "Search";
+            //if (!"".Equals(searchTextBox.Text))
+            //{
+            //    searchChange();
+            //}
         }
         private void productsListView_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -153,6 +169,7 @@ namespace Client.Views
 
         private void BookButton_Click(object sender, RoutedEventArgs e)
         {
+            lastPick = (RoomsEntity)roomsListView.SelectedItem;
             PopupBookingScreen popupBookingScreen = new PopupBookingScreen(lastPick);
             popupBookingScreen.ShowDialog();
         }
@@ -165,12 +182,16 @@ namespace Client.Views
             {
                 if (PickRoomId != null)
                 {
+                    addListRoomButton.IsEnabled = false;
                     RoomDTO roomDTO = new RoomDTO();
                     roomDTO.id = itemRoom.id;
                     roomDTO.roomType = itemRoom.roomType;
                     roomDTO.roomRate = itemRoom.roomRate;
+
                     roomDTO.hotel.name = itemRoom.hotels.name;
                     roomDTO.hotel.id = itemRoom.hotels.id;
+
+                    addListRoomButton.IsEnabled = true;
 
                     PickRoomId.Invoke(roomDTO);
                     homeSearch.Children.Clear();
@@ -178,7 +199,7 @@ namespace Client.Views
                 else
                 {
                     int id = itemRoom.id;
-                    SendData<int> sendData = new SendData<int>(Actions.DETAIL_ROOM, "aaa", id);
+                    SendData<int> sendData = new SendData<int>(Actions.DETAIL_ROOM, "Detail room", id);
                     int byteSent = SocketUtils.send(sendData);
                     ReceiveData<RoomsEntity> receiveData = SocketUtils.receiveRoom();
                     RoomsEntity roomsEntity = (RoomsEntity)receiveData.data;

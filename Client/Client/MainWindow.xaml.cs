@@ -1,4 +1,5 @@
-﻿using Client.Utils;
+﻿using Client.DTO;
+using Client.Utils;
 using Client.Views;
 using System;
 using System.Collections.Generic;
@@ -22,11 +23,12 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(string username)
+        public MainWindow(UserDTO data)
         {
             InitializeComponent();
-            infoAccount.DataContext = username;
-            Application.Current.Properties["username"] = username;
+
+            infoAccount.DataContext = data.username;
+            Application.Current.Properties["userId"] = data.id.ToString();
         }
         private void Dashboard_Loaded(object sender, RoutedEventArgs e)
         {
@@ -73,6 +75,11 @@ namespace Client
 
             this.Close();
 
+        }
+
+        private void infoRoom_Click(object sender, RoutedEventArgs e)
+        {
+            _main.Navigate(new HotelBookingHistoryScreen());
         }
     }
 }

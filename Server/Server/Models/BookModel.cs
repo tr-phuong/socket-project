@@ -64,7 +64,7 @@ namespace Server.Models
             }
             return listBook;
         }
-        public BookEntity findByUserId(int userID)
+        public BookEntity findByUserId(string userId)
         {
             BookEntity bookEntity = null;
             using (NpgsqlConnection conn = PostgresqlConfig.getConnection())
@@ -72,7 +72,7 @@ namespace Server.Models
                 conn.Open();
                 if (conn.State == ConnectionState.Open)
                 {
-                    string sql = String.Format("SELECT id, user_id, total FROM booking WHERE user_id = {0} LIMIT 1", userID);
+                    string sql = String.Format("SELECT b.id, b.user_id, b.total FROM booking b INNER JOIN users u ON b.user_id = u.id WHERE b.user_id = {0} LIMIT 1;", Int32.Parse(userId));
                     using (NpgsqlCommand command = new NpgsqlCommand(sql, conn))
                     {
                         NpgsqlDataReader reader = command.ExecuteReader();
@@ -90,7 +90,7 @@ namespace Server.Models
             }
             return bookEntity;
         }
-        public BookEntity createBook(int userId)
+        public BookEntity createBook(string userId)
         {
             BookEntity bookEntity = null;
             using (NpgsqlConnection conn = PostgresqlConfig.getConnection())
@@ -98,7 +98,7 @@ namespace Server.Models
                 conn.Open();
                 if (conn.State == ConnectionState.Open)
                 {
-                    string sql = String.Format("INSERT INTO booking (user_id) VALUE ({0})", userId);
+                    string sql = String.Format("INSERT INTO booking (user_id) VALUE ({0})", Int32.Parse(userId));
                     using (NpgsqlCommand command = new NpgsqlCommand(sql, conn))
                     {
                         NpgsqlDataReader reader = command.ExecuteReader();
@@ -129,19 +129,14 @@ namespace Server.Models
                         string sql = "INSERT INTO booking_item(hotel_id, room_id, booking_date, leaving_date, note, book_id, rate) VALUES";
                         foreach (BookItemEntity item in listRoom)
                         {
-                            sql += String.Format(@"({0}, {1}, {2}, {3}, {4}, {5}, {6}),",
+                            sql += String.Format(@"({0}, {1}, '{2}', '{3}', '{4}', {5}, {6}),",
                                     item.hotelsEntity.id,
                                     item.roomsEntity.id,
                                     item.bookingDate,
                                     item.leavingDate,
-                                    item.note,
+                                    (item.note.Equals("")) ? "." : item.note,
                                     bookId,
                                     item.rate);
-                            //if (!map.ContainsKey(item.book.id))
-                            //{
-                            //    map.Add(item.book.id, 0);
-                            //}
-                            //map[item.book.id] += item.rate;
                         }
                         sql = sql.Remove(sql.Length - 1);
 
@@ -172,5 +167,142 @@ namespace Server.Models
             }
             return total;
         }
+        public List<BookItemEntity> findAllListHotelBookingHistory(string userId)
+        {
+            List<BookItemEntity> listroom = new List<BookItemEntity>();
+            using (NpgsqlConnection conn = PostgresqlConfig.getConnection())
+            {
+                conn.Open();
+                if (conn.State == ConnectionState.Open)
+                {
+                    string sql = String.Format(@"
+                                    SELECT b.id AS book_id,
+                                            b.total,
+                                            bi.id AS book_item_id,
+                                            h.id AS hotel_id,
+                                            h.""name"" AS hotel_name,
+                                            r.id AS room_id,
+                                            r.room_type,
+                                            r.room_rate,
+                                            r.poster,
+                                            bi.rate,
+                                            bi.booking_date,
+                                            bi.leaving_date
+                                    FROM booking b
+                                    JOIN booking_item bi ON b.id = bi.book_id
+                                    JOIN hotels h ON h.id = bi.hotel_id
+                                    JOIN rooms r ON r.id = bi.room_id AND r.hotel_id = h.id
+                                    JOIN users u ON u.id = b.user_id
+                                    WHERE u.id = {0}; ", Int32.Parse(userId));
+
+                    using (NpgsqlCommand command = new NpgsqlCommand(sql, conn))
+                    {
+                        NpgsqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            try {
+                                listroom.Add(new BookItemEntity()
+                                {
+                                    id = reader.GetInt32("book_item_id"),
+                                    hotelsEntity = new HotelsEntity()
+                                    {
+                                        id = reader.GetInt32("hotel_id"),
+                                        name = reader.GetString("hotel_name")
+                                    },
+                                    roomsEntity = new RoomsEntity()
+                                    {
+                                        id = reader.GetInt32("room_id"),
+                                        roomType = reader.GetString("room_type"),
+                                        roomRate = reader.GetInt32("room_rate"),
+                                        poster = reader.GetString("poster")
+                                    },
+                                    bookingDate = reader.GetDateTime("booking_date"),
+                                    leavingDate = reader.GetDateTime("leaving_date"),
+                                    rate = reader.GetInt32("rate"),
+                                    book = new BookEntity()
+                                    {
+                                        total = reader.GetInt64("total")
+                                    }
+                                });
+                            }
+                            catch(Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                                throw new Exception(ex.Message);
+                            }
+                        }
+                        reader.Close();
+                    }
+                }
+            }
+
+            return (listroom.Count > 0) ? listroom : null;
+        }
+        public bool isCancelBookingItem(BookItemEntity bookItemEntity)
+        {
+            bool isCancel = false;
+            using (NpgsqlConnection conn = PostgresqlConfig.getConnection())
+            {
+                conn.Open();
+                if (conn.State == ConnectionState.Open)
+                {
+                    string sql = String.Format("DELETE FROM booking_item b WHERE b.id = {0} AND b.book_id = {1};", bookItemEntity.id, bookItemEntity.book.id);
+                    using (NpgsqlCommand command = new NpgsqlCommand(sql, conn))
+                    {
+                        try {
+                            int rows = command.ExecuteNonQuery();
+                            if(rows > 0)
+                            {
+                                isCancel = true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception(ex.Message);
+                        }
+                       
+                    }
+                }
+            }
+            return isCancel;
+        }
+
+        public BookItemEntity findBookingItem(int bookingItemId)
+        {
+            BookItemEntity bookItemEntity = null;
+            using (NpgsqlConnection conn = PostgresqlConfig.getConnection())
+            {
+                conn.Open();
+                if (conn.State == ConnectionState.Open)
+                {
+                    string sql = String.Format("SELECT b.id, b.book_id, b.hotel_id, b.room_id, booking_date, leaving_date, b.created_at FROM booking_item b WHERE b.id = {0};", bookingItemId);
+                    using (NpgsqlCommand command = new NpgsqlCommand(sql, conn))
+                    {
+                        NpgsqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                bookItemEntity = new BookItemEntity();
+                                bookItemEntity.id = reader.GetInt32("id");
+                                bookItemEntity.book.id = reader.GetInt32("book_id");
+                                bookItemEntity.hotelsEntity.id = reader.GetInt32("hotel_id");
+                                bookItemEntity.roomsEntity.id = reader.GetInt32("room_id");
+                                bookItemEntity.bookingDate = reader.GetDateTime("booking_date");
+                                bookItemEntity.leavingDate = reader.GetDateTime("leaving_date");
+                                bookItemEntity.createdAt = reader.GetDateTime("created_at");
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(ex.Message);
+                            }
+                        }
+
+                    }
+                }
+            }
+            return bookItemEntity;
+        }
+
     }
 }

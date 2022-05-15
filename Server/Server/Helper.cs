@@ -16,10 +16,10 @@ namespace Server
             List<BookItemEntity> listBookItems = parseJson.list_book_items;
             return listBookItems;
         }
-        public static int getUserId(string json)
+        public static string getUserId(string json)
         {
             dynamic parseJson = JsonConvert.DeserializeObject(json);
-            int userId = parseJson.user_id;
+            string userId = parseJson.userId;
             return userId;
         }
     }

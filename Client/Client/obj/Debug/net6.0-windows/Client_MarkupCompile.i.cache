@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\pc\Desktop\project\Client\Client\App.xaml
-101012608103
+111492123031
 
-32-905696970
+3622076128
 197-75570074
-MainWindow.xaml;Utils\Dialog.xaml;Utils\Message.xaml;Views\BookScreen.xaml;Views\LoginScreen.xaml;Views\PopupBookingScreen.xaml;Views\PopupScreen .xaml;Views\RegisterScreen.xaml;Views\RoomDetails.xaml;Views\SearchScreen.xaml;
+MainWindow.xaml;Utils\Dialog.xaml;Utils\Message.xaml;Views\BookScreen.xaml;Views\HotelBookingHistoryScreen.xaml;Views\LoginScreen.xaml;Views\PopupBookingScreen.xaml;Views\PopupScreen .xaml;Views\RegisterScreen.xaml;Views\RoomDetails.xaml;Views\SearchScreen.xaml;
 
 True
 

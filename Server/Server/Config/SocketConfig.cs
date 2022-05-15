@@ -178,7 +178,7 @@ namespace Server.Config
                                 string loggedData = JsonConvert.SerializeObject(userLoginSend);
                                 byte[] loggedDataBytes = Encoding.UTF8.GetBytes(loggedData);
 
-                                // Send a message to Client
+
                                 currentClient.Send(loggedDataBytes);
                                 Log.info(Lever.SERVER, Actions.LOGGED, loggedData);
 
@@ -232,16 +232,20 @@ namespace Server.Config
                         }
                         break;
                     case Actions.BOOKING:
-                        Log.info(Lever.CLIENT, Actions.BOOKING, json);
-                        //Dictionary<int, Int64> map = new Dictionary<int, Int64>();
-                        string data = dataReceive.data.toList();
+                        try {
+                            Log.info(Lever.CLIENT, Actions.BOOKING, json);
+                            BookingDTO data = ((JObject)dataReceive?.data).ToObject<BookingDTO>();
+                            //BookingDTO data = (BookingDTO)dataReceive.data;
 
-                        var dataSend = bookController.addListRoomItem(data);
-                        string dataSendJson = JsonConvert.SerializeObject(dataSend);
-                        byte[] dataSendBytes = Encoding.UTF8.GetBytes(dataSendJson);
+                            var dataSend = bookController.addListRoomItem(data);
+                            string dataSendJson = JsonConvert.SerializeObject(dataSend);
+                            byte[] dataSendBytes = Encoding.UTF8.GetBytes(dataSendJson);
 
-                        currentClient.Send(dataSendBytes);
-                        Log.info(Lever.SERVER, Actions.BOOKING, dataSendJson);
+                            currentClient.Send(dataSendBytes);
+                            Log.info(Lever.SERVER, Actions.BOOKING, dataSendJson);
+                        }catch (Exception ex) {
+                            Console.WriteLine(ex.Message);
+                        }
                         break;
                     case Actions.DETAIL_ROOM:
                         try
@@ -251,14 +255,51 @@ namespace Server.Config
                             var detailRoomSend = roomController.getOne(id);
 
                             string detailRoomData = JsonConvert.SerializeObject(detailRoomSend);
-                            byte[] registerDataBytes = Encoding.UTF8.GetBytes(detailRoomData);
+                            byte[] detailDataBytes = Encoding.UTF8.GetBytes(detailRoomData);
 
                             // Send a data to Client
-                            currentClient.Send(registerDataBytes);
+                            currentClient.Send(detailDataBytes);
                             Log.info(Lever.SERVER, Actions.DETAIL_ROOM, detailRoomData);
                         }
                         catch (Exception ex)
                         {
+                            Console.WriteLine(ex.Message);
+                        }
+                        break;
+                    case Actions.SHOW_HOTEL_BOOKING_HISTORY:
+                        try {
+                            Log.info(Lever.CLIENT, Actions.SHOW_HOTEL_BOOKING_HISTORY, json);
+
+                            string userId = (string)dataReceive.data;
+                            var listHotelBookingHistory = bookController.getListHotelBookingHistory(userId);
+
+                            string listHotelBookingHistoryJson = JsonConvert.SerializeObject(listHotelBookingHistory);
+                            byte[] listHotelBookingHistoryBytes = Encoding.UTF8.GetBytes(listHotelBookingHistoryJson);
+
+                            // Send a data to Client
+                            currentClient.Send(listHotelBookingHistoryBytes);
+                            Log.info(Lever.SERVER, Actions.SHOW_HOTEL_BOOKING_HISTORY, listHotelBookingHistoryJson);
+
+                        } catch (Exception ex) {
+                            Console.WriteLine(ex.Message);
+                        }
+                        break;
+                    case Actions.CANCEL_BOOKING_ROOM:
+                        try {
+                            Log.info(Lever.CLIENT, Actions.CANCEL_BOOKING_ROOM, json);
+
+                            int bookingItemId = (int)dataReceive?.data;
+
+                            var cancelRoom = bookController.cancelBookingItem(bookingItemId);
+
+                            string cancelRoomJson = JsonConvert.SerializeObject(cancelRoom);
+                            byte[] cancelRoomBytes = Encoding.UTF8.GetBytes(cancelRoomJson);
+
+                            // Send a data to Client
+                            currentClient.Send(cancelRoomBytes);
+                            Log.info(Lever.SERVER, Actions.CANCEL_BOOKING_ROOM, cancelRoomJson);
+                        }
+                        catch (Exception ex) {
                             Console.WriteLine(ex.Message);
                         }
                         break;
@@ -282,9 +323,6 @@ namespace Server.Config
 
                 if (exit)
                 {
-                    //currentClient.Close();
-                    //clientSockets.Remove(currentClient);
-                    //Console.WriteLine("=== Client close connect ===");
                     closeConnect(currentClient);
                     return;
                 }

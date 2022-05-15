@@ -15,6 +15,7 @@ namespace Server.Utils
         public const string BOOKING = "BOOKING";
         public const string DETAIL_ROOM = "DETAIL_ROOM";
         public const string CANCEL_BOOKING_ROOM = "CANCEL_BOOKING_ROOM";
+        public const string SHOW_HOTEL_BOOKING_HISTORY = "SHOW_HOTEL_BOOKING_HISTORY";
 
         // exit
         public const string EXIT  = "EXIT";

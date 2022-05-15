@@ -43,3 +43,5 @@ C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\BookScr
 C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\PopupBookingScreen.g.cs
 C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\BookScreen.baml
 C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\PopupBookingScreen.baml
+C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\HotelBookingHistoryScreen.g.cs
+C:\Users\pc\Desktop\project\Client\Client\obj\Debug\net6.0-windows\Views\HotelBookingHistoryScreen.baml

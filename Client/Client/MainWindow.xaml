@@ -11,7 +11,7 @@
         Width="1100"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
-        MinHeight="710"
+        MinHeight="770"
         MinWidth="1000"
         Background="{x:Null}"
         Loaded="Dashboard_Loaded">
@@ -38,7 +38,7 @@
                           Height="30" >
                         <MenuItem Header="{Binding Path=Username}" 
                                   FontFamily="Sitka Subheading" 
-                                  ToolTip="{Binding Path=Role}" VerticalAlignment="Center"
+                                  ToolTip="{Binding Path=Username}" VerticalAlignment="Center"
                                   >
                             <MenuItem.Icon>
                                 <Border CornerRadius="25" BorderThickness="1" BorderBrush="Black" 
@@ -50,7 +50,7 @@
                                 </Border>
                                 <!--<materialDesign:PackIcon Kind="User" Height="20" Width="20"  HorizontalAlignment="Left" VerticalAlignment="Center"/>-->
                             </MenuItem.Icon>
-                            <MenuItem Header="Xem hồ sơ" FontFamily="Sitka Subheading" ToolTip="Xem hồ sơ thông tin cá nhân">
+                            <MenuItem Header="Xem phòng đã đặt" Click="infoRoom_Click" FontFamily="Sitka Subheading" ToolTip="Xem phòng đã đặt">
 
                             </MenuItem>
                             <Separator/>

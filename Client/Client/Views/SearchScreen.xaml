@@ -153,7 +153,7 @@
 
                     <!--Control-->
                     <Grid Grid.Row="0" Background="#FFFAFAFA">
-                        <Grid Grid.Row="1">
+                        <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
@@ -188,17 +188,24 @@
                     <!--Sản phẩm-->
                     <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="40"/>
                         </Grid.RowDefinitions>
 
+                        <Grid Grid.Row="0" Background="#fff" Margin="0 0 0 0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10 0 0 0">
+                                <TextBlock Name="header" FontFamily="Sitka Subheading" FontStyle="Italic" FontSize="14"/>
+                                <TextBlock Name="nameHotel" FontFamily="Sitka Subheading"  FontStyle="Italic" FontSize="14" />
+                            </StackPanel>
+                            <Line VerticalAlignment="Bottom"/>
+                        </Grid>
+                        
                         <!--Danh sách sản phẩm-->
-
-                        <Grid Grid.Row="0" Background="#F0F2F5">
+                        <Grid Grid.Row="1" Background="#F0F2F5">
                             <ListView Name="roomsListView" 
                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                                       ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                      PreviewMouseLeftButtonDown="roomsListView_PreviewMouseLeftButtonUp"
                                       MouseDoubleClick="roomListView_MouseDoubleClick">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -318,7 +325,7 @@
                         </Grid>
 
                         <!--Phân trang-->
-                        <Grid Grid.Row="1" Background="White">
+                        <Grid Grid.Row="2" Background="White">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 
                                 <!--Click="PreviousPaging_Click"-->

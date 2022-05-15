@@ -27,7 +27,8 @@ namespace Client.Views
             InitializeComponent();
             _roomsEntity = lastPick;
 
-            //hotelNameTB.Text = _roomsEntity.hotels.name;
+            hotelNameTB.Text = _roomsEntity.hotels.name;
+            hotelNameTB.IsReadOnly = true;
             tbTypeRoom.Text = _roomsEntity.roomType;
             tbTypeRoom.IsReadOnly = true;
             tbRateRoom.Text = Convert(_roomsEntity.roomRate);

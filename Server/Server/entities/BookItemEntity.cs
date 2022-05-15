@@ -18,7 +18,11 @@ namespace Server.entities
         public string note { get; set; }
         public DateTime createdAt { get; set; }
         public int rate { get; set; }
-        public BookItemEntity() { }
+        public BookItemEntity() {
+            hotelsEntity = new HotelsEntity();
+            roomsEntity = new RoomsEntity();
+            book = new BookEntity();
+        }
         public BookItemEntity(int id, HotelsEntity hotelsEntity, RoomsEntity roomsEntity, BookEntity book,
             DateTime bookngDate, DateTime leavingDate, string note, DateTime createdAt, int rate)
         {
