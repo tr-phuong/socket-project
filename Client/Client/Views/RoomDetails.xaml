@@ -75,9 +75,9 @@
                                     ShadowDepth="1"
                                     BlurRadius="10"/>
                 </Border.Effect>
+                <!--Source="{Binding Path=poster, Mode=OneTime}"-->
                 <Image Stretch="Fill"
-                       Name="imgProduct"
-                       Source="{Binding Path=poster, Mode=OneTime}">
+                       Name="imgRoom">
                 </Image>
             </Border>
 

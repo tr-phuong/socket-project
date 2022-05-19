@@ -30,17 +30,65 @@ namespace Client.Views
         public delegate void PickRoom(RoomDTO Data);
         public PickRoom PickRoomId;
         private const Int32 TIMEOUT = 10000;
+        private int ROW_PER_PAGE = 8;
+
+        private List<RoomsEntity> listRooms = new List<RoomsEntity>();
+
+        private PagingInfo _pagingInfo;
 
         public SearchScreen()
         {
             InitializeComponent();
         }
+        void CalculatePagingInfo()
+        {
+            int count = listRooms.Count();
+            _pagingInfo = new PagingInfo()
+            {
+                RowsPerPage = ROW_PER_PAGE,
+                TotalItems = count,
+                TotalPages = count / ROW_PER_PAGE + (((count % ROW_PER_PAGE) == 0) ? 0 : 1),
+                CurrentPage = 1
+            };
 
-        /// <summary>
-        /// Quay lại màn hình home
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+            comboBoxPaging.ItemsSource = _pagingInfo.Pages;
+            comboBoxPaging.SelectedIndex = 0;
+
+            statusLabel.Content = $"Tổng sản phẩm: {count} ";
+
+        }
+        void UpdateListRoomView()
+        {
+            var skip = (_pagingInfo.CurrentPage - 1) * _pagingInfo.RowsPerPage;
+            var take = _pagingInfo.RowsPerPage;
+            roomsListView.ItemsSource = listRooms.Skip(skip).Take(take);
+        }
+
+        private void PreviousPaging_Click(object sender, RoutedEventArgs e)
+        {
+            var currentIndex = comboBoxPaging.SelectedIndex;
+            if (currentIndex > 0)
+            {
+                comboBoxPaging.SelectedIndex--;
+            }
+        }
+
+        private void NextPaging_Click(object sender, RoutedEventArgs e)
+        {
+            var currentIndex = comboBoxPaging.SelectedIndex;
+            if (currentIndex <= _pagingInfo.Pages.Count)
+            {
+                comboBoxPaging.SelectedIndex++;
+            }
+        }
+
+        private void ComboPageIndex_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int nextPage = comboBoxPaging.SelectedIndex + 1;
+            _pagingInfo.CurrentPage = nextPage;
+
+            UpdateListRoomView();
+        }
         private void backWard_Click(object sender, RoutedEventArgs e)
         {
             // nếu Pick sản phẩm để tạo hóa đơn
@@ -62,7 +110,8 @@ namespace Client.Views
         /// <param name="e"></param>
         private void categoriesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            CalculatePagingInfo();
+            UpdateListRoomView();
         }
 
         #region Xử lý hiệu ứng Comboxbox
@@ -88,7 +137,7 @@ namespace Client.Views
         private void searchChange()
         {
             string name = searchTextBox.Text;
-            SendData<String> sendData = new SendData<String>(Actions.SHOW_LIST, "aaa", name);
+            SendData<String> sendData = new SendData<String>(Actions.SHOW_LIST, "Show list", name);
             int byteSent = SocketUtils.send(sendData);
             ReceiveListData receiveListData = SocketUtils.receiveListRooms();
             if(receiveListData.listData.Count > 0)
@@ -96,7 +145,13 @@ namespace Client.Views
                 header.Text = "Tên khách sạn được tìm kiếm: ";
                 nameHotel.Text = receiveListData.listData[0].hotels.name;
             }
-            roomsListView.ItemsSource = receiveListData.listData.ToList();
+            else
+            {
+                header.Text = "";
+                nameHotel.Text = "";
+            }
+            listRooms = receiveListData.listData.ToList();
+            //roomsListView.ItemsSource = receiveListData.listData.ToList();
         }
         /// <summary>
         /// Nhân giá trị text trong khung Search
@@ -114,11 +169,9 @@ namespace Client.Views
             if (!"".Equals(searchTextBox.Text))
             {
                 searchChange();
+                CalculatePagingInfo();
+                UpdateListRoomView();
             }
-            //if (!"".Equals(searchTextBox.Text))
-            //{
-            //    searchChange();
-            //}
         }
         private void productsListView_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -136,33 +189,6 @@ namespace Client.Views
                 PopupScreen popupScreen = new PopupScreen(roomsEntity, receiveData.action);
                 popupScreen.Show();
             }
-
-
-
-
-
-
-            //var db = new MyShopEntities(_connectionString);
-            //dynamic itemProduct = (sender as ListView).SelectedItem;
-
-            //if (itemProduct != null)
-            //{
-            //    // lấy sản phẩm trong database
-            //    var product = db.Products.Find(itemProduct.Product_Id);
-
-            //    // nếu Pick sản phẩm để tạo hóa đơn
-            //    if (PickProductId != null)
-            //    {
-            //        PickProductId.Invoke(product);
-            //        homeProduct.Children.Clear();
-            //    }
-            //    else
-            //    {
-            //        var screen = new DetailProductScreen(_connectionString, product);
-            //        screen.RefreshProductList = refresh;
-            //        homeProduct.Children.Add(screen);
-            //    }
-            //}
 
         }
 
@@ -182,7 +208,6 @@ namespace Client.Views
             {
                 if (PickRoomId != null)
                 {
-                    addListRoomButton.IsEnabled = false;
                     RoomDTO roomDTO = new RoomDTO();
                     roomDTO.id = itemRoom.id;
                     roomDTO.roomType = itemRoom.roomType;
@@ -190,8 +215,6 @@ namespace Client.Views
 
                     roomDTO.hotel.name = itemRoom.hotels.name;
                     roomDTO.hotel.id = itemRoom.hotels.id;
-
-                    addListRoomButton.IsEnabled = true;
 
                     PickRoomId.Invoke(roomDTO);
                     homeSearch.Children.Clear();
@@ -222,6 +245,7 @@ namespace Client.Views
         {
             BookScreen bookScreen = new BookScreen();
             homeSearch.Children.Add(bookScreen);
+            addListRoomButton.IsEnabled = false;
         }
     }
 }

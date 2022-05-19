@@ -31,6 +31,8 @@ namespace Client.Views
 
             roomRateTextBox.Text = convert(roomsEntity.roomRate);
 
+            imgRoom.Source = new BitmapImage(new Uri(roomsEntity.poster, UriKind.Relative));
+
             DateTime dt = roomsEntity.dateBook;
             string format = String.Format("{0:d/M/yyyy HH:mm}", dt);
             dateBookTextBox.Text = format;

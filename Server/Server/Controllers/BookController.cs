@@ -42,11 +42,16 @@ namespace Server.Controllers
 
                 double day = (item.leavingDate - item.bookingDate).TotalDays;
 
-                if (hoursBook <= CHECKIN_TIME && hoursLeave < CHECKOUT_TIME)
-                {
-                    int dayRound = (int)Math.Round(day);
-                    item.rate = item.roomsEntity.roomRate * dayRound;
-                }
+                int dayRound = (int)Math.Round(day);
+                item.rate = item.roomsEntity.roomRate * dayRound;
+
+                item.bookingDate.AddHours(12);
+                item.leavingDate.AddHours(12);
+                //if (hoursBook <= CHECKIN_TIME && hoursLeave < CHECKOUT_TIME)
+                //{
+                //    int dayRound = (int)Math.Round(day);
+                //    item.rate = item.roomsEntity.roomRate * dayRound;
+                //}
             }
         }
         public SendData<long> addListRoomItem(BookingDTO data)
@@ -63,6 +68,9 @@ namespace Server.Controllers
                 
                 int found = listBookItems.Where(x => x.bookingDate > x.leavingDate).ToList().Count();
                 if (found > 0) return new SendData<long>(Actions.BOOKING, "Ngày đặt không được phép lớn hơn ngày rời đi, vui lòng chọn lại", 0);
+
+                int listBookItemsCount = listBookItems.Where(x => x.bookingDate < DateTime.Now || x.leavingDate < DateTime.Now).ToList().Count;
+                if (listBookItemsCount > 0) return new SendData<long>(Actions.BOOKING, "Vui lòng chọn ngày đặt hoặc ngày rời đi lớn hơn ngày hiện tại", 0);
 
                 var duplicates = listBookItems.GroupBy(s => s).SelectMany(grp => grp.Skip(1)) as BookItemEntity;
                 if (duplicates != null) return new SendData<long>(Actions.BOOKING, String.Format("Phòng khách sạn '{0}' đã bị đặt trùng, vui lòng đặt lại.", duplicates.hotelsEntity.name), 0);

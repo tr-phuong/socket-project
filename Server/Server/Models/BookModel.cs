@@ -152,6 +152,18 @@ namespace Server.Models
                                     {
                                         total = Convert.ToInt32(comm.ExecuteScalar());
                                     }
+
+                                    string listRoomIdStr = String.Join("', '", listRoom.Select(s => s.roomsEntity.id).ToList());
+                                    string queryUpdateRoom = String.Format("UPDATE rooms SET status = 'HẾT PHÒNG', activate = 0 WHERE id IN ('{0}')", listRoomIdStr);
+
+                                    using (NpgsqlCommand commUpdate = new NpgsqlCommand(queryUpdateRoom, conn))
+                                    {
+                                        int rowsUpdate = commUpdate.ExecuteNonQuery();
+                                        if (rowsUpdate <= 0) {
+                                            throw new Exception("Update fail");
+                                        }
+                                    }
+
                                 }
                             }
                             catch (Exception ex)

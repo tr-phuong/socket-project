@@ -334,6 +334,7 @@
                                         BorderBrush="#303030"
                                         VerticalAlignment="Center"
                                         Height="30" Width="30"
+                                        Click="PreviousPaging_Click"
                                         Style="{StaticResource MaterialDesignIconForegroundButton}">
                                     <materialDesign:PackIcon Kind="KeyboardArrowLeft"
                                                              Height="30"
@@ -355,6 +356,7 @@
                                           VerticalAlignment="Center"
                                           DropDownOpened="ComboProductTypes_DropDownOpened"
                                           DropDownClosed="ComboProductTypes_DropDownClosed"
+                                          SelectionChanged="ComboPageIndex_SelectionChanged"
                                           ItemsSource="{Binding LongListToTestComboVirtualization}">
                                 </ComboBox>
                                 <!--SelectionChanged="ComboPageIndex_SelectionChanged"-->
@@ -365,6 +367,7 @@
                                         BorderBrush="#303030"
                                         Height="30"
                                         Width="30"
+                                        Click="NextPaging_Click"
                                         Style="{StaticResource MaterialDesignIconForegroundButton}">
                                     <materialDesign:PackIcon Kind="KeyboardArrowRight"
                                                              Height="30"

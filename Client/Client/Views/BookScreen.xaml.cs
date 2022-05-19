@@ -42,7 +42,8 @@ namespace Client.Views
         private void selectRoom_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var chooseRoom = new SearchScreen();
-            chooseRoom.contentBack.Content = "Chọn phòng";
+            chooseRoom.contentBack.Content = "Đặt Phòng";
+            chooseRoom.addListRoomButton.Visibility = Visibility.Hidden;
             chooseRoom.PickRoomId = (x) =>
             {
                 RoomDTO roomDTO = x;
@@ -61,6 +62,7 @@ namespace Client.Views
 
                 bookItemEntity.rate = roomDTO.roomRate;
             };
+            chooseRoom.addListRoomButton.Visibility = Visibility.Visible;
             bookScreen.Children.Add(chooseRoom);
         }
 
