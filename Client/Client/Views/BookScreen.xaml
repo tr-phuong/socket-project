@@ -260,7 +260,7 @@
                             </GridViewColumn.HeaderTemplate>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding dateBook, StringFormat='{}{0:MM/dd/yyyy h:mm tt}'}" />
+                                    <TextBlock Text="{Binding bookingDate, StringFormat='{}{0:MM/dd/yyyy h:mm tt}'}" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

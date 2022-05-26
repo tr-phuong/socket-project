@@ -37,16 +37,13 @@ namespace Server.Controllers
         {
             foreach (var item in listBookItems)
             {
-                int hoursBook = Int32.Parse(item.bookingDate.ToString("HH tt"));
-                int hoursLeave = Int32.Parse(item.leavingDate.ToString("HH tt"));
-
                 double day = (item.leavingDate - item.bookingDate).TotalDays;
 
                 int dayRound = (int)Math.Round(day);
                 item.rate = item.roomsEntity.roomRate * dayRound;
 
-                item.bookingDate.AddHours(12);
-                item.leavingDate.AddHours(12);
+                //item.bookingDate.AddHours(12);
+                //item.leavingDate.AddHours(12);
                 //if (hoursBook <= CHECKIN_TIME && hoursLeave < CHECKOUT_TIME)
                 //{
                 //    int dayRound = (int)Math.Round(day);

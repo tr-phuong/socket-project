@@ -150,7 +150,7 @@ namespace Server.Config
                         try
                         {
                             Log.info(Lever.CLIENT, Actions.REGISTER, json);
-                            UserEntity userReg = dataReceive.data;
+                            UserEntity userReg = ((JObject)dataReceive?.data).ToObject<UserEntity>();
                             var userRegisterSend = userController.register(userReg);
 
                             string registerData = JsonConvert.SerializeObject(userRegisterSend);
@@ -169,8 +169,7 @@ namespace Server.Config
                         try
                         {
                             Log.info(Lever.CLIENT, Actions.LOGIN, json);
-                            JObject jobj = dataReceive.data as JObject;
-                            UserLogin userLogin = jobj.ToObject<UserLogin>();
+                            UserLogin userLogin = ((JObject)dataReceive?.data).ToObject<UserLogin>();
                             SendData<UserDTO> userLoginSend = userController.login(userLogin);
 
                             if (userLoginSend.getFlags() && userLoginSend.action.Equals(Actions.LOGGED))

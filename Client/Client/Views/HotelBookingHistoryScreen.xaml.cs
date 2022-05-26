@@ -35,13 +35,24 @@ namespace Client.Views
         }
         private void getListBookingHotel()
         {
-            string userId = Application.Current.Properties["userId"] as string;
-            SendData<String> sendData = new SendData<String>(Actions.SHOW_HOTEL_BOOKING_HISTORY, "Show history", userId);
-            int byteSent = SocketUtils.send(sendData);
-            ReceiveData<BookingDTO> receiveData = SocketUtils.receiveListData(byteSent);
+            try
+            {
+                string userId = Application.Current.Properties["userId"] as string;
+                SendData<String> sendData = new SendData<String>(Actions.SHOW_HOTEL_BOOKING_HISTORY, "Show history", userId);
+                int byteSent = SocketUtils.send(sendData);
+                ReceiveData<BookingDTO> receiveData = SocketUtils.receiveListData(byteSent);
 
-            listBookItem = receiveData.data.listBookItem;
-            updateView();
+                if (receiveData.data.listBookItem != null) {
+                    listBookItem = receiveData.data.listBookItem;
+                    updateView();
+                }
+            }
+            catch(Exception ex)
+            {
+                var notification = new Dialog() { Message = ex.Message };
+                notification.Owner = Window.GetWindow(this);
+                notification.ShowDialog();
+            }
         }
 
         private void backWard_Click(object sender, RoutedEventArgs e)

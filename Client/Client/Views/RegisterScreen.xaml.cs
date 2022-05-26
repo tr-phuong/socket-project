@@ -78,9 +78,18 @@ namespace Client.Views
             SendData<UserEntity> sendData = new SendData<UserEntity>(Actions.REGISTER, "", newUser);
             SocketUtils.send(sendData);
             ReceiveData<UserDTO> receive = SocketUtils.receiveUser();
-            Dialog dialog = new Dialog() { Message = receive.message };
-            dialog.Owner = Window.GetWindow(this);
-            dialog.ShowDialog();
+            if (receive.message.Equals(MessResponse.SUCCESS))
+            {
+                Dialog dialog = new Dialog() { Message = "Dang ky thanh cong!" };
+                dialog.Owner = Window.GetWindow(this);
+                dialog.ShowDialog();
+            }
+            else
+            {
+                Dialog dialog = new Dialog() { Message = receive.message };
+                dialog.Owner = Window.GetWindow(this);
+                dialog.ShowDialog();
+            }
         }
 
         private void login_Click(object sender, RoutedEventArgs e)

@@ -120,22 +120,31 @@ namespace Client.Views
             dialogNotification.ShowDialog();
             if (true == dialogNotification.DialogResult)
             {
-                string userId = Application.Current.Properties["userId"] as string;
-                BookingDTO bookingDTO = new BookingDTO(userId, listBookItem);
-
-                SendData<BookingDTO> sendData = new SendData<BookingDTO>(Actions.BOOKING, "Booking", bookingDTO);
-                int byteSent = SocketUtils.send(sendData);
-                ReceiveData<long> receiveTotal = SocketUtils.receiveTotal();
-
-                if (receiveTotal.message.Equals(MessResponse.SUCCESS))
+                try
                 {
-                    var messBox = new Dialog() { Message = String.Format("Tổng tiền: {0} đ", Convert(receiveTotal.data)) };
-                    messBox.Owner = Window.GetWindow(this);
-                    messBox.ShowDialog();
+                    string userId = Application.Current.Properties["userId"] as string;
+                    BookingDTO bookingDTO = new BookingDTO(userId, listBookItem);
+
+                    SendData<BookingDTO> sendData = new SendData<BookingDTO>(Actions.BOOKING, "Booking", bookingDTO);
+                    int byteSent = SocketUtils.send(sendData);
+                    ReceiveData<long> receiveTotal = SocketUtils.receiveTotal();
+
+                    if (receiveTotal.message.Equals(MessResponse.SUCCESS))
+                    {
+                        var messBox = new Dialog() { Message = String.Format("Tổng tiền: {0} đ", Convert(receiveTotal.data)) };
+                        messBox.Owner = Window.GetWindow(this);
+                        messBox.ShowDialog();
+                    }
+                    else
+                    {
+                        var messBox = new Dialog() { Message = receiveTotal.message };
+                        messBox.Owner = Window.GetWindow(this);
+                        messBox.ShowDialog();
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    var messBox = new Dialog() { Message = receiveTotal.message };
+                    var messBox = new Dialog() { Message = ex.Message };
                     messBox.Owner = Window.GetWindow(this);
                     messBox.ShowDialog();
                 }
@@ -150,30 +159,44 @@ namespace Client.Views
             updateView();
         }
         private void BtnAddNewRoom_Click(object sender, RoutedEventArgs e)
-        {
-            DateTime dateBook = (DateTime)dateBookDatePicker.SelectedDate;
-            DateTime leavingDate = (DateTime)leavingDateDatePicker.SelectedDate;
+        { 
+            try { 
+                if((DateTime)dateBookDatePicker.SelectedDate == null || (DateTime)leavingDateDatePicker.SelectedDate == null)
+                {
+                    Dialog dialog = new Dialog() { Message = "Vui long chon ngay" };
+                    dialog.Owner = Window.GetWindow(this);
+                    dialog.ShowDialog();
+                 }
+                DateTime dateBook = (DateTime)dateBookDatePicker.SelectedDate;
+                DateTime leavingDate = (DateTime)leavingDateDatePicker.SelectedDate;
 
-            if(dateBook == null || leavingDate == null) {
-                Dialog dialog = new Dialog() { Message = "Vui lòng chọn ngày " + ((dateBook == null) ? "đặt" : "rời đi ") +""};
-                dialog.Owner = Window.GetWindow(this);
-                dialog.ShowDialog();
-                return;
+                if (dateBook == null || leavingDate == null)
+                {
+                    Dialog dialog = new Dialog() { Message = "Vui lòng chọn ngày " + ((dateBook == null) ? "đặt" : "rời đi ") + "" };
+                    dialog.Owner = Window.GetWindow(this);
+                    dialog.ShowDialog();
+                    return;
+                }
+                if (dateBook > leavingDate)
+                {
+                    Dialog dialog = new Dialog() { Message = "Ngày rời đi phải lớn hơn ngày đặt, vui lòng chọn lại!" };
+                    dialog.Owner = Window.GetWindow(this);
+                    dialog.ShowDialog();
+                    return;
+                }
+
+                bookItemEntity.bookingDate = dateBook;
+                bookItemEntity.leavingDate = leavingDate;
+                bookItemEntity.note = (noteRoomTextBox.Text.Equals("")) ? "" : noteRoomTextBox.Text;
+                updateListRoom();
+                clear();
             }
-            if (dateBook > leavingDate)
+            catch(Exception ex)
             {
-                Dialog dialog = new Dialog() { Message = "Ngày rời đi phải lớn hơn ngày đặt, vui lòng chọn lại!" };
+                Dialog dialog = new Dialog() { Message = ex.Message };
                 dialog.Owner = Window.GetWindow(this);
                 dialog.ShowDialog();
-                return;
             }
-
-
-            bookItemEntity.bookingDate = dateBook;
-            bookItemEntity.leavingDate = leavingDate;
-            bookItemEntity.note = (noteRoomTextBox.Text.Equals("")) ? "" : noteRoomTextBox.Text;
-            updateListRoom();
-            clear();
         }
         private void clear()
         {

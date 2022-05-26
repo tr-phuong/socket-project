@@ -168,6 +168,11 @@ namespace Client.Views
 
             if (!"".Equals(searchTextBox.Text))
             {
+                //Thread thread = new Thread(() =>
+                //{
+
+                //});
+                //thread.Start();
                 searchChange();
                 CalculatePagingInfo();
                 UpdateListRoomView();

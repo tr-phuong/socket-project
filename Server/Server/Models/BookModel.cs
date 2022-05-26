@@ -98,7 +98,7 @@ namespace Server.Models
                 conn.Open();
                 if (conn.State == ConnectionState.Open)
                 {
-                    string sql = String.Format("INSERT INTO booking (user_id) VALUE ({0})", Int32.Parse(userId));
+                    string sql = String.Format("INSERT INTO booking (user_id) VALUES ({0})", Int32.Parse(userId));
                     using (NpgsqlCommand command = new NpgsqlCommand(sql, conn))
                     {
                         NpgsqlDataReader reader = command.ExecuteReader();
@@ -154,7 +154,7 @@ namespace Server.Models
                                     }
 
                                     string listRoomIdStr = String.Join("', '", listRoom.Select(s => s.roomsEntity.id).ToList());
-                                    string queryUpdateRoom = String.Format("UPDATE rooms SET status = 'HẾT PHÒNG', activate = 0 WHERE id IN ('{0}')", listRoomIdStr);
+                                    string queryUpdateRoom = String.Format("UPDATE rooms SET status = 'HẾT PHÒNG', activate = false WHERE id IN ('{0}')", listRoomIdStr);
 
                                     using (NpgsqlCommand commUpdate = new NpgsqlCommand(queryUpdateRoom, conn))
                                     {
